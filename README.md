@@ -48,6 +48,30 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 
 > 上游自 0.1.3（2026-07-14）之后**一行未改**，本仓库的 issue 修复均领先于官方。
 
+### 对照表（官方 0.1.3 → 本 fork 0.1.9）
+
+| 能力 | 官方 0.1.3 | 本 fork |
+|---|---|---|
+| **半透明** | **完全失效**：Transparent 被连续两次 `clip()` 打成 Cutout，无 alpha 混合（#11） | 真正做 alpha 混合（采纳未合并 PR #13） |
+| **透明排序** | 队列 `2460`（不透明区间） | `3000`（Transparent 区间） |
+| **阴影颜色** | 只有渐变 ramp | `ShadowColor` 模块：lilToon 式 1/2/3 层阴影色 + 边框/模糊/强度/对比度 |
+| **发光** | 没有（`Lighten` 只是亮度乘数，不是自发光） | `Emission` 模块，4 种混合模式，在 `postpixel` 阶段 → 不受阴影衰减 |
+| **光照调整** | 结果被硬编码 `saturate()` | `_LightMinLimit` / `_LightMaxLimit` / `_MonochromeLighting` / `_AsUnlit`（同 lilToon 名与默认值） |
+| **受光方向** | 写死「真实光照 + 视线×1.5」，侧光下渐变与直射光会打架（#9） | `_ShadeDirectionBias`，设 `0` 即完全跟随真实光照 |
+| **VR 里的 MatCap** | 双眼贴图相同，反射像"贴"在模型上（PR #12） | `VR Parallax Strength`，默认 `1` = 逐眼采样 |
+| **大网格 + 近平面修正** | 只能全局关，覆盖屏幕的大网格会整个消失（#8） | 逐材质 `Enable` 开关 |
+| **遮罩通道** | 只能 R/G/B/A | **8 档**，含 `1-R / 1-G / 1-B / 1-A`（#10） |
+| **lilToon 迁移** | 只能手工重做 | 内置转换器（生成新材质、不动原材质） |
+| **界面语言** | 日文 / 英文 | 新增简体中文（11 个 `.po`，含转换器 UI） |
+| **环境光穿模 / 光照衰减 / 镜面高光** | 各有偏差 | 与 URP 对齐、高光受阴影衰减、F0 可调 |
+| **描边** | 无可调深度偏移；pass 里 8 次帧深度采样是死代码 | `_OutlineOffsetFactor` / `_OutlineOffsetUnits`；死代码已删 |
+
+**体量对比**：文件 132 → **188**；属性声明 95 → **134**（Unity 实测每着色器属性数：NonToon **125** / NonToonFur **111**）。
+
+> 想自己 diff 的话注意：**官方 release zip 是 CRLF、本 fork 是 LF**（源自上游 Git 仓库源码）。
+> 用 `diff -rq --strip-trailing-cr -x '*.meta' <官方0.1.3> <本fork>` 只会看到 **21 个**内容变更文件；
+> 不加 `--strip-trailing-cr` 会看到 51 个 —— 多出来的 30 个只是换行符不同（功能无影响）。
+
 **缺陷修复**
 
 1. BiRP 补 `factor *= factor` —— 光照衰减曲线与 URP 对齐（原 BiRP 过渡偏平）
