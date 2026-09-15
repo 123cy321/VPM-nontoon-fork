@@ -26,6 +26,7 @@
 - [功能总览](#功能总览)
 - [注意事项与性能](#注意事项与性能)
 - [与官方 NonToon 的兼容性](#与官方-nontoon-的兼容性)
+- [与 AAO 和 MA 等优化工具共存](#与-aao-和-ma-等优化工具共存)
 - [常见问题](#常见问题)
 - [已知限制](#已知限制)
 - [版本记录](#版本记录)
@@ -410,6 +411,69 @@ lilToon 官方建议 VRChat 里把下限放在 **0.0~0.2**；本插件默认给 
 | **Poiyomi / Standard 等** | ① Avatar 光源**与着色器无关**，任何着色器都能用；② 自有光源只对 NonToon 材质有效 |
 | **ShaderCore** | 本包依赖 `jp.lilxyzw.shadercore ≥ 0.1.9`（VPM 自动带走）。ShaderCore 0.1.12 起不再附带简体中文表，本包会在缺失时自动补 |
 
+---
+
+## 与 AAO 和 MA 等优化工具共存
+
+VRChat 圈里很多人用 **AAO（Avatar Optimizer）** 和 **MA（Modular Avatar）**。下面是本包与它们的实际关系
+（依据 AAO/MA 官方文档 + 本机实测；**没验证到的会明确写出来**）。
+
+### AAO（Avatar Optimizer）
+
+**能一起用，外观不会出问题。** 但有两件具体的事要知道：
+
+**1) 网眼合并 + 「亮度径向」：兼容**
+
+AAO 的 `Merge Skinned Mesh` 文档原文：
+
+> "material-related animations **will work without modification**."
+
+边界条件是（AAO changelog PR #769）：
+
+> "Merge Skinned Mesh **does not support animating material properties differently**… 
+> **If you animated all materials from same animations, your animation will not be warned.**"
+
+本包 ③ 插件生成的剪辑，对**每个 Renderer 写的是同一条曲线、同一个值** —— 正落在"支持"的那一侧。
+> ⚠️ 但如果你手动把它改成"每个材质不一样的值"，就会进入 AAO 明确不支持的情况（AAO 会警告，且可能失效）。
+
+**2) 材质合并 / UV 打包：本包暂时拿不到（性能差异）**
+
+AAO 的 `Merge Material` 与 `Trace and Optimize` 的贴图优化**只对提供了 Shader Information 的着色器生效**。
+AAO 官方列出已支持的有 Standard / ToonLit / ToonStandard / **lilToon** —— **NonToon 不在其中**（我们还没注册这个 API）。
+
+所以用 AAO 时：
+
+| | lilToon | NonToon (Fork) |
+|---|---|---|
+| 纹理图集 / UV 打包 / 移除被关掉功能的贴图 | ✅ 支持 | ❌ 走"保守路径"，不做这些优化（**外观不受影响**，只是少一层优化） |
+
+- 如果你**必须**依赖 AAO 的贴图图集，现阶段请在需要图集的部位用 lilToon
+- 这条已列入我们的待办（注册 AAO 的 `ShaderInformation`，需要装了 AAO 的环境才能验证）
+- 另外 AAO 的材质合并**本身就不支持视差（Parallax）与 UV 滚动**类功能，而本包有 MatCap VR 视差 —— 即使以后注册了 API，这部分也不适合走合并
+
+**3) Trace and Optimize 会规整动画层**
+
+AAO 会把 `Entry-Exit` 形状的层转成 BlendTree —— 我们生成的层本来就是 BlendTree，参数与曲线不变。
+AAO 官方承诺 T&O "**never let it affect the appearance**"，所以判定风险低。
+> ⚠️ **未验证**：我们生成的层/参数在 AAO 实际构建中会不会被判为"未使用"而优化掉（本机没装 AAO）。
+> 如果你同时用 T&O 和径向，麻烦实测一次；若径向失效，请反馈。
+
+### MA（Modular Avatar）
+
+| 组件 | 与本包的关系 |
+|---|---|
+| **Remove Vertex Color** | ⚠️ **别和「从顶点色取描边宽度」一起用**：本包的描边在开启该选项时用 `vertex.color.rgb * 2 - 1` 当法线（`sc_common.hlsl`），顶点色被移除后描边方向会走形。该选项**默认关闭**，没开就没影响 |
+| **Merge Animator** | ⚠️ 它的路径默认"**相对于 Merge Animator 组件**"，所以**不要用它来装本包 ③ 生成的 FX 控制器**（我们写死的 `material._LightMinLimit` 绑定会指向错对象）。③ 生成的控制器是**直接写进 avatar descriptor 的 FX 层**的，这是正确用法 |
+| **Material Swap / Material Setter** | 可以用。运行时亮度径向仍会写"当前材质"的属性 ⇒ 行为一致；但**换上的材质不会保留它自己面板里的亮度值**（会被径向覆盖） |
+| **Menu Item / Parameters** | ③ 生成的 Expression Parameter 与菜单控件是标准资产，和 MA 的菜单系统可以共存（注意别重复添加同名参数） |
+
+### Quest 相关
+
+| | 结论 |
+|---|---|
+| **NonToon / NonToonFur** 采样器 | 去重后只有 **7 个**（GLES3 规范保证 ≥16）✅ 采样器不是瓶颈 |
+| **NonToonFur（毛发）** | ❌ **有 7 个几何着色器 pass**，而 GLES3 不支持几何着色器 ⇒ **Fur 请只在 PC 上用**（这也与上游那台"Fur 在老 N 卡/Radeon 上膨胀"的 issue 同源） |
+| **本体的 `#pragma target 5.0`** | ⚠️ **未验证**：12 个 pass 用 target 5.0（这个值是**继承自官方 0.1.3**，不是本分支引入）。Unity 里它要求 DX11 / ES3.1+AEP / Vulkan；Quest 的 GLES3 路径是否存在编译风险，本机**没有 Android 构建支持、无法实测**。对照：lilToon 主要用 target 3.5，明显更保守。**如果你在 Quest 上遇到粉色/异常，请带上机型反馈** |
 ---
 
 ## 常见问题
