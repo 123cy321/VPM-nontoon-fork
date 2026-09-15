@@ -9,7 +9,7 @@
 
 ## 一键添加
 
-**▶ [点我打开添加页面](https://123cy321.github.io/VPM-nontoon-fork/)**
+**▶ [点我打开添加页面](https://catandling.github.io/VPM-nontoon-fork/)**
 
 那个页面上的按钮就是 `vcc://` 深链，点一下会唤起 VCC 的「添加仓库」确认框。
 
@@ -21,13 +21,13 @@
 需要手动添加时，把下面这行复制到浏览器地址栏，效果和点按钮相同：
 
 ```text
-vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json
+vcc://vpm/addRepo?url=https://catandling.github.io/VPM-nontoon-fork/vpm.json
 ```
 
 **ALCOM** 直接粘贴 listing 地址（注意是 `vpm.json`，不是 `.zip`）：
 
 ```text
-https://123cy321.github.io/VPM-nontoon-fork/vpm.json
+https://catandling.github.io/VPM-nontoon-fork/vpm.json
 ```
 
 ## 怎么用（ALCOM / VCC）
@@ -36,7 +36,7 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 2. 粘贴 listing 地址：
 
    ```
-   https://123cy321.github.io/VPM-nontoon-fork/vpm.json
+   https://catandling.github.io/VPM-nontoon-fork/vpm.json
    ```
 
 3. 之后在工程的包管理页里会出现**两个**包（仓库里同时保留旧版本便于回退）：
