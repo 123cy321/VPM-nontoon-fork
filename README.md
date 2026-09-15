@@ -2,10 +2,27 @@
 
 这是一个 [VPM](https://vcc.docs.vrchat.com/vpm/) 包仓库，用于分发 **NonToon 的自定义构建**。
 
+## 一键添加
+
+**▶ [点我添加到 VCC（vcc:// 深链）](vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json)**
+
+如果点了没反应（浏览器或 GitHub 的 Markdown 渲染器会过滤 `vcc:` 这类非 http(s) 协议），
+把下面这行复制到浏览器地址栏打开，或按下一节的步骤手动粘贴：
+
+```text
+vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json
+```
+
+**ALCOM** 直接粘贴 listing 地址（注意是 `vpm.json`，不是 `.zip`）：
+
+```text
+https://123cy321.github.io/VPM-nontoon-fork/vpm.json
+```
+
 ## 怎么用（ALCOM / VCC）
 
 1. 打开 ALCOM（或 VCC），找到**添加仓库 / Add Repository** 的入口
-2. 粘贴这个地址：
+2. 粘贴 listing 地址：
 
    ```
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
