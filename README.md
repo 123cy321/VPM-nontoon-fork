@@ -43,8 +43,8 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 
    | 包 | 装不装 | 说明 |
    |---|---|---|
-   | **`NonToon (Fork)` 0.3.0** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
-   | **`NonToon (Fork) Tools` 0.4.0** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 |
+   | **`NonToon (Fork)` 0.3.1** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Tools` 0.4.1** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 / 实时光源 |
 
    > 依赖方向是**单向的**：装工具包会自动带着色器；装着色器**不会**带工具包（工具是可选件）。
    > 工具包的 **id 仍是 `com.123cy321.nontoon-converter`**（历史原因，保持 id 才能原地升级），显示名已改成 Tools。
@@ -161,6 +161,30 @@ ShaderCore 的显示名靠 `lang/*.po` 查表，而**手工写在 `.scshader` �
 以前只能对 `_ShadowStrengthMask` / `_ShadowBorderMask` / `_ShadowBlurMask` **发警告**，现在
 **同名属性、同通道语义**直接迁移（Strength 用 `.r`；Blur/Border 用 `.rgb` 对应第 1/2/3 层），
 转换器自动拷贴图 + 打开 `Use Shadow Masks`。开关默认**关**，关着时一次采样都不做。
+
+## 0.3.1 新增（性能不再当约束）
+
+VRChat 性能等级不重要时（avatar 本来就是极高负载），之前为 `Lights = 0` 与省算力放弃的东西都拿回来：
+
+- **PCSS 画质四档**：低 8+12 / 中 12+24 / 高 20+40 / **极高 32+64** 次采样；烘焙分辨率上限 1024 → **2048**。
+  深度图采样改成显式 LOD 0，顺带消掉了 `gradient instruction used in a loop` 的编译警告。
+- **实时光源模式**（PCSS4VRC 走的那条路）：给 avatar 真挂一盏 **Spot Light**，影子**实时**（改姿势立刻变、不用烘焙）。
+  「创建 / 同步实时光源」会自动：
+  1. 建 Spot Light（软阴影；角度/范围/颜色/强度/阴影强度来自组件字段）
+  2. **Culling Mask 默认第 10 层 `PlayerLocal`** → 不照世界、不照其他玩家（每端只有自己的 avatar 在这个层上）
+  3. 把层级里所有 Renderer 的 **Receive Shadows / Cast Shadows** 打开（有些 avatar 默认是关的，关了就不出影子）
+  4. 关掉材质里的 `_UseSelfLight`，避免"真光源 + 着色器私有光"双份打光
+  5. 配置不合理（没选 PlayerLocal / 范围 > 8m）时面板给警告
+
+  代价（面板上也写了）：占 Lights 计数；影子能不能看到取决于**观看者**的 Shadow Quality；多盏这种光会叠加照白；
+  Quest 基本不可用。**默认仍是烘焙模式**，两条路可以随时切换。
+
+### 顺带补上一个验证缺口
+
+0.3.0 的「shader 无报错」当时是**假绿** —— `-nographics` 批处理不编译 shader 变体，
+`ShaderUtil.GetShaderMessages` 对故意写错的着色器也报 0 条。现在改成**构建 AssetBundle**
+（真正调 `UnityShaderCompiler`）并加**负向对照**：故意写错的着色器必须被报错，否则本探针结论作废。
+结果：对照被报错 ✓，NonToon / NonToonFur **0 编译错误、0 警告**。
 
 ## 这个构建相对官方 NonToon 0.1.3 改了什么
 
