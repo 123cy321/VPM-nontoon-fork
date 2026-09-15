@@ -9,7 +9,7 @@
 |---|---|
 | **一键添加** | **https://catandling.github.io/VPM-nontoon-fork/** ← 点页面上的按钮 |
 | 手动添加用地址 | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
-| 当前版本 | 着色器 **0.3.6** ｜ 工具包 **0.4.6** |
+| 当前版本 | 着色器 **0.3.7** ｜ 工具包 **0.4.7** |
 | 环境 | Unity 2022.3 ／ **BiRP（VRChat）** ／ Quest 可用 |
 
 > ⚠️ **账号改名过**：`123cy321` → **`CatAndLing`**。GitHub Pages 不做重定向，旧地址已失效。
@@ -154,12 +154,25 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 **Q：老是提示 ShaderCore 模块缺失？**
 装完本包会在编辑器加载时自动补注册并重导着色器（ShaderCore 的模块表只扫描一次，升级上来会静默丢模块）。
 
+**Q：升级到 0.3.7 后，场景里某个组件变成 `Missing (Mono Script)`？**
+0.3.6 及更早的包里，**「① Avatar 光源」这个脚本文件漏带了 `.meta`**，于是 Unity 给每台机器生成的是**不同的 GUID**
+—— 你挂好组件之后换机器打开、或重装这个包，引用就会断。0.3.7 已修（补齐 `.meta`）。
+**处理方法**：把那个变成 Missing 的组件删掉，重新挂一次（`GameObject ▸ NonToon ▸ ① 创建 Avatar 光源`）并重填参数。
+从 0.3.7 起 GUID 已固定，以后升级不会再断。
+
+**Q：我明明选了简体中文，为什么面板里还有英文？**
+0.3.7 起**不需要你手动选**了：中文 Windows 上 ShaderCore 的默认语言是 `zh-CN`，旧版本包只带了 `zh-Hans.po`，
+两者对不上，所以默认状态下 165 条属性里只有 35 条是中文。0.3.7 会自动把中文表补齐成当前语言那份，现在 **117 条**。
+剩下约 48 条是 ShaderCore 自己的底层属性（`SrcBlendRGB` / `ZWrite` / `Ref` / `Comp` / `Pass` / `Cull` / `AlphaToMask` 等），
+属于 ShaderCore 的词表，本包补不到。
+
 ---
 
 ## 版本记录
 
 | 版本 | 要点 |
 |---|---|
+| **0.3.7** | **修 `.meta` 缺失**（以前重装/换机后「① Avatar 光源」组件会变 Missing Script）＋ **修默认语言下汉化基本不生效**（中文 Windows 默认 `zh-CN`，以前 165 条里只有 35 条中文，现在 117 条，**不用再手动去 Language 里选简体中文**） |
 | **0.3.6** | 组件拆成两类（不用改材质 / 需材质启用）、**作用范围**与**光源编号**、**屏蔽环境光**、**阴影颜色 / 阴影强度遮罩 / 可自备阴影贴图**；修「自有光被每盏附加光各加一遍」的过曝 |
 | 0.3.5 | 面板整理（内部参数不再堆在面板上）、**色温**、**环境光匹配** |
 | 0.3.4 | 消耗压回去：默认档 20 采样、强度 0 零采样、面板显示采样预算 |
@@ -170,7 +183,7 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 | 0.2.0 | 新增自有光源（私有光 + 烘焙自阴影） |
 | 0.1.4 – 0.1.11 | 半透明修复、透明排序、受光方向、MatCap VR 视差、Nearer 开关、8 档遮罩通道、转换器独立成包 |
 
-工具包 `com.123cy321.nontoon-converter` 对应 0.4.x（0.4.6 起含两类光源组件、光源编号、面板预算）。
+工具包 `com.123cy321.nontoon-converter` 对应 0.4.x（0.4.6 起含两类光源组件、光源编号、面板预算；0.4.7 起补齐 `.meta`）。
 
 > 每个版本的 zip 与 SHA-256 都在 [listing](https://catandling.github.io/VPM-nontoon-fork/vpm.json) 里。
 
