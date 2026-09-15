@@ -11,7 +11,7 @@
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    ```
 
-3. 之后在工程的包管理页里，`NonToon` 会出现 **0.1.4** 版本，安装即可
+3. 之后在工程的包管理页里，`NonToon` 会出现 **0.1.5** 版本，安装即可
 
 > ⚠️ 注意粘贴的是上面这个 **`vpm.json` 的地址**，不是 `.zip` 的地址。
 
@@ -50,7 +50,7 @@ ShaderCore 的语言默认取系统区域（如 `zh-CN`），而语言文件叫 
 
 ## 关于包 id
 
-本构建**沿用官方的包 id `jp.lilxyzw.nontoon`**，只是版本号更高（0.1.4 > 0.1.3）。
+本构建**沿用官方的包 id `jp.lilxyzw.nontoon`**，只是版本号更高（0.1.5 > 0.1.3）。
 
 这样做是刻意的：它会被视为官方版的**升级**，安装后即替换官方版，不会出现两个同名
 `Shader "NonToon"` 共存（Unity 材质按 GUID 引用 shader，本构建刻意保留了官方的全部资源 GUID，
