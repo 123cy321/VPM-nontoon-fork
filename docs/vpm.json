@@ -107,6 +107,20 @@
             "jp.lilxyzw.nontoon": ">=0.1.11"
           },
           "zipSHA256": "5bfce7839bf7c935e8653ac9ce81157ccc5c318d53d29871591757f4088ff80a"
+        },
+        "0.1.1": {
+          "name": "com.123cy321.nontoon-converter",
+          "version": "0.1.1",
+          "displayName": "NonToon (Fork) Converter",
+          "description": "lilToon -> NonToon material converter, shipped as a companion package to NonToon (Fork) so that the shader package stays a pure library. Generates NEW materials and never modifies the original lilToon materials. VRChat's PipelineManager is accessed through reflection, so this package has no VRChat SDK dependency and also works in non-VRChat projects. 0.1.1: fixed material detection for model assets dragged from the Project window (fbx / prefab), which previously found 0 materials and left the convert button greyed out.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/com.123cy321.nontoon-converter-0.1.1.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.nontoon": ">=0.1.11"
+          },
+          "zipSHA256": "b8eeb27903fd8309658b751f36d0ea8f18445b0f5c453abf5a646147b5b97ce1"
         }
       }
     }
