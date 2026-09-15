@@ -451,12 +451,26 @@ AAO 官方列出已支持的有 Standard / ToonLit / ToonStandard / **lilToon** 
 - 这条已列入我们的待办（注册 AAO 的 `ShaderInformation`，需要装了 AAO 的环境才能验证）
 - 另外 AAO 的材质合并**本身就不支持视差（Parallax）与 UV 滚动**类功能，而本包有 MatCap VR 视差 —— 即使以后注册了 API，这部分也不适合走合并
 
-**3) Trace and Optimize 会规整动画层**
+**3) Trace and Optimize 会规整动画层 —— 已实测**
 
-AAO 会把 `Entry-Exit` 形状的层转成 BlendTree —— 我们生成的层本来就是 BlendTree，参数与曲线不变。
-AAO 官方承诺 T&O "**never let it affect the appearance**"，所以判定风险低。
-> ⚠️ **未验证**：我们生成的层/参数在 AAO 实际构建中会不会被判为"未使用"而优化掉（本机没装 AAO）。
-> 如果你同时用 T&O 和径向，麻烦实测一次；若径向失效，请反馈。
+AAO 会把 `Entry-Exit` 形状的层转成 BlendTree；我们生成的层本来就是 BlendTree，参数与曲线不变。
+
+**实测（AAO 1.9.16 + NDMF 1.14.3，批处理里跑完整构建）**：用一个带 `TraceAndOptimize` 组件 +
+本包 ③ 插件真实产物的 avatar 调 `AvatarProcessor.ProcessAvatar`，**23 项断言全过**：
+
+| 检查 | 结果 |
+|---|---|
+| 亮度层 `NonToon LightMinLimit` 是否还在 | ✅ 还在 |
+| Float 参数 `NT_Light` / BlendTree 驱动 | ✅ 都还在 |
+| `material._LightMinLimit` 曲线 | ✅ 还在，且 **2/2 条绑定都能解析到处理后 avatar 里的对象** |
+| Expression Parameter `NT_Light` | ✅ 还在 |
+| NonToon 材质的贴图/属性有没有被动 | ✅ 没动（材质资产、`_BaseTexture`、贴图文件都在） |
+
+AAO 在构建中还**真的把两个相同材质合并成了一个** —— 这正是 AAO"材质动画"警告的触发场景，
+而**全程没有任何材质动画警告**，与它文档里"所有材质用同一条动画 ⇒ 不会警告"完全一致。
+
+> 另外提醒：用 AAO/NDMF 构建时，NDMF 会检查**所有贴图**是否启用 **Mip Streaming**，没开会在构建报告里报错
+> （与本包无关，但排障时要知道）。
 
 ### MA（Modular Avatar）
 
