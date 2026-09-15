@@ -43,8 +43,8 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 
    | 包 | 装不装 | 说明 |
    |---|---|---|
-   | **`NonToon (Fork)` 0.2.0** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
-   | **`NonToon (Fork) Tools` 0.3.0** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 |
+   | **`NonToon (Fork)` 0.3.0** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Tools` 0.4.0** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 |
 
    > 依赖方向是**单向的**：装工具包会自动带着色器；装着色器**不会**带工具包（工具是可选件）。
    > 工具包的 **id 仍是 `com.123cy321.nontoon-converter`**（历史原因，保持 id 才能原地升级），显示名已改成 Tools。
@@ -126,6 +126,41 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 > ⚠️ 要点：阴影是**烘焙那一刻的姿态**（换姿势/改网格/改光源方向都要重烘）；数据写在**材质**里
 > （多对象共享材质就会共享结果）；贴图必须保持"非 sRGB / 不压缩 / 无 mipmap"。
 > 完整注意事项（10 条）见包内 **`SelfLight.md`**。
+
+## 0.3.0 新增
+
+### 1. 汉化补齐（这次修的是"看着还有一半是英文"）
+
+ShaderCore 的显示名靠 `lang/*.po` 查表，而**手工写在 `.scshader` 里的 ShaderLab 属性**
+（模板测试 / 渲染 / 描边偏移那一整块）之前根本没进 po —— 折叠标题是中文、**里面的
+`Ref / Comp / Pass / Cull / SrcBlend / ZWrite / AlphaToMask / Outline Offset…` 全是英文**。现在：
+
+- 补全这些 + `Off/Front/Back` 枚举标签 + **模块折叠标题**（ShaderCore 用 `module.name` 当标签）
+  + ShaderCore 会在当前表里查的通用键（右键菜单 `复制/粘贴/重置/还原`、渲染队列 `几何体/镂空/半透明`、锁定提示）
+- 13 个模块的 po 都补了通用键：**着色器侧 146 条**
+- 工具包新增 `NTL10n` + `lang/zh-Hans.po`：**151 条**，覆盖窗口 / 报告 / 日志 / 进度条 / 安装状态 /
+  SelfLight 检视面板（字段标签也是自己画的）；**未命中的 key 原样显示英文**（英文 fallback）
+- 菜单项无法走 po（`[MenuItem]` 要编译期常量），直接写成中英双语
+
+### 2. SelfLight v2：PCSS 软阴影（参考 nHaruka 的 PCSS4VRC）
+
+| | PCSS4VRC「真实影システム」 | 本分支 SelfLight v2 |
+|---|---|---|
+| 手段 | 真·Spot Light + 定制着色器 | 私有光 + 烘焙深度图，**没有 Light 组件** |
+| VRChat 性能等级 | Lights = 1 → PC 上最高 **Poor** | Lights 保持 **0** |
+| 外溢 | 会照亮世界/他人 | 完全不外溢 |
+| Quest | 官方说明**不支持** | 可用（固定采样、无动态循环） |
+
+移植过来的是：**PCSS**（blocker search → 变半径 PCF，固定 8+12 次采样）、**Shadow Distance**
+（默认 10m 自动关闭）、**ReceiveMask**（逐像素控制哪里接收阴影），另外加了 **阴影浓度** 与
+**Shadow Clamp**（把软边压成硬边，动画风）。PCSS 关掉就是 1 次采样的硬阴影。
+**CastMask 没做**（我们的深度图是烘焙时 CPU 光栅化的），详见 `SelfLight.md`。
+
+### 3. lilToon 逐像素阴影遮罩可转换
+
+以前只能对 `_ShadowStrengthMask` / `_ShadowBorderMask` / `_ShadowBlurMask` **发警告**，现在
+**同名属性、同通道语义**直接迁移（Strength 用 `.r`；Blur/Border 用 `.rgb` 对应第 1/2/3 层），
+转换器自动拷贴图 + 打开 `Use Shadow Masks`。开关默认**关**，关着时一次采样都不做。
 
 ## 这个构建相对官方 NonToon 0.1.3 改了什么
 
