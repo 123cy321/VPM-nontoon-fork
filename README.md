@@ -64,6 +64,22 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 菜单：`Tools ▸ LilToon to NonToon Converter`
 （也可以右键 Hierarchy 里的模型 → `Convert lilToon to NonToon`）
 
+**本分支的能力已经被转换器用上了（0.2.0）** —— 不再是"只能近似"：
+
+- **发光 1:1**：`_EmissionColor` / `_EmissionMap` / `_EmissionBlend` / `_EmissionBlendMask` /
+  `_EmissionMainStrength` / `_EmissionBlendMode` 全套 → 原生 `Emission` 模块，且**不被阴影衰减**
+  （原版工具只能把强度近似成 `LightBoost`，其 `Mapping.md` 明确写着「Emission Map は未対応」）
+- **lilToon 光照调整 1:1**：`_AsUnlit` / `_LightMinLimit` / `_LightMaxLimit` / `_MonochromeLighting`
+  —— 本分支这几个属性与 lilToon **同名同义**，直接搬（原版工具只把它们写进诊断日志）
+- **阴影 1:1**：lilToon 的 1/2/3 层阴影色走原生 `ShadowColor` 模块（保真 border/blur/strength），
+  并**自动关掉 Shade ramp** 避免两层叠加
+- **受光方向**：自动把 `_ShadeDirectionBias` 置 **0**，让着色**跟光**（贴近 lilToon 的行为）；
+  想要 NonToon 原味就把它调回 `1.5`
+- 发光遮罩不再占用共享遮罩通道（原生模块直接挂贴图）
+
+转换后请过一遍包内 **`Mapping.md`** 的「转换后的注意事项」（12 条：阴影叠加、受光方向、未移植项、
+描边深度偏移为何没自动映射、报告文件在哪……）。
+
 **两种用法，任选一种**
 
 1. **拖进去**（0.1.10 起）—— 把模型（Hierarchy 里的，或 Project 里的 fbx / prefab）、材质、文件夹
