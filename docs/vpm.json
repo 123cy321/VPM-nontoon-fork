@@ -121,6 +121,20 @@
             "jp.lilxyzw.nontoon": ">=0.1.11"
           },
           "zipSHA256": "b8eeb27903fd8309658b751f36d0ea8f18445b0f5c453abf5a646147b5b97ce1"
+        },
+        "0.2.0": {
+          "name": "com.123cy321.nontoon-converter",
+          "version": "0.2.0",
+          "displayName": "NonToon (Fork) Converter",
+          "description": "lilToon -> NonToon material converter, shipped as a companion package to NonToon (Fork) so that the shader package stays a pure library. Generates NEW materials and never modifies the original lilToon materials. VRChat's PipelineManager is accessed through reflection, so this package has no VRChat SDK dependency and also works in non-VRChat projects. 0.2.0 exploits this fork's extra capabilities: lilToon emission is copied 1:1 into the native Emission module (map / blend mask / main strength / blend mode), lilToon lighting adjustments (_AsUnlit / _LightMinLimit / _LightMaxLimit / _MonochromeLighting) are copied 1:1, and Shade Direction Bias is set to 0 so the shade follows the real light like lilToon. See Mapping.md for the full table and the after-conversion checklist.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/com.123cy321.nontoon-converter-0.2.0.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.nontoon": ">=0.1.11"
+          },
+          "zipSHA256": "699afd579ce6ac6753f6fa4e11f74e1722376b025399519eb696c7f80b9ea559"
         }
       }
     }
