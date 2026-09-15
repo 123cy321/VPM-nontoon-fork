@@ -43,8 +43,8 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 
    | 包 | 装不装 | 说明 |
    |---|---|---|
-   | **`NonToon (Fork)` 0.3.1** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
-   | **`NonToon (Fork) Tools` 0.4.1** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 / 实时光源 |
+   | **`NonToon (Fork)` 0.3.2** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Tools` 0.4.2** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 / 实时光源 |
 
    > 依赖方向是**单向的**：装工具包会自动带着色器；装着色器**不会**带工具包（工具是可选件）。
    > 工具包的 **id 仍是 `com.123cy321.nontoon-converter`**（历史原因，保持 id 才能原地升级），显示名已改成 Tools。
@@ -180,11 +180,44 @@ VRChat 性能等级不重要时（avatar 本来就是极高负载），之前为
   Quest 基本不可用。**默认仍是烘焙模式**，两条路可以随时切换。
 
 ### 顺带补上一个验证缺口
-
 0.3.0 的「shader 无报错」当时是**假绿** —— `-nographics` 批处理不编译 shader 变体，
 `ShaderUtil.GetShaderMessages` 对故意写错的着色器也报 0 条。现在改成**构建 AssetBundle**
 （真正调 `UnityShaderCompiler`）并加**负向对照**：故意写错的着色器必须被报错，否则本探针结论作废。
 结果：对照被报错 ✓，NonToon / NonToonFur **0 编译错误、0 警告**。
+
+## 0.3.2 新增（修「材质面板还有一半英文」）
+
+**症状**：材质面板里 `Main` / `Select Modules` / `Textrue` / `Shared Mask` / `Shared Gradients` /
+`Normal Map` / `Use Roughness in Normal Map` / `Roughness` / `Cutoff` / `Create Texture` 全是英文，
+而 `阴影偏移` / `抖动` / `不透明` 是中文 —— 一半一半。
+
+**根因**（不是我们的 po 漏了，是**根本轮不到我们的 po**）：
+
+```csharp
+// ShaderCore 的 L10n.L()
+coreTransration ??= SCModule.LoadLocalizationDirect(language, "Packages/jp.lilxyzw.shadercore/lang/");
+if (key.StartsWith("__") && coreTransration.TryGetValue(key, out var v)) return v;   // ← 命中就返回
+```
+
+`LoadLocalizationDirect` 在找不到 `<语言>.po` 时**回落到 `en-US.po`**。而 **ShaderCore 0.1.12 的
+`lang/` 里只有 `en-US.po` 和 `ja-JP.po`，没有 `zh-Hans.po`** —— 于是这些 `__*` 内置键在 core 表里
+命中**英文**并直接返回；我们在自己包里写多少 po 都到不了那个分支。
+（`阴影偏移` 这类是我们自己的键，走着色器表，所以是中文。）
+
+**修法**：由本包在 ShaderCore 的 `lang/` 下**补齐 `zh-Hans.po`**（语言是 `zh-CN` 时也一并补）：
+
+- 只在**缺失**时写，**绝不覆盖**上游自带的（实测：上游自带时原文件原样保留）
+- 幂等（重复调用不会改内容）
+- 找不到 ShaderCore 包目录（例如老式的 Assets 装法）就安静跳过
+- ShaderCore 自己监听 `.po` 变化，补完会**自动刷新界面**，不用重启 Unity
+
+实测（负向对照）：补之前 `L("__Texture")` = `Texture`（复现 bug）；补之后 = `贴图`，
+且 `__Main`→`主要`、`__SelectModules`→`选择模块`、`__Roughness`→`粗糙度`、`__Cutoff`→`裁剪阈值`、
+`__SharedMask`→`共享遮罩`、`__SharedGradients`→`共享渐变`、`__NormalMap`→`法线贴图`、
+`__NormalMapWithRoughness`→`使用法线贴图中的粗糙度`、`__CreateTexture`→`创建贴图`。
+
+> 前提：材质编辑器右上角的 **Language 要选「简体中文」**。选英文时本来就应该显示英文。
+
 
 ## 这个构建相对官方 NonToon 0.1.3 改了什么
 

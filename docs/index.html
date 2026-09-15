@@ -79,13 +79,15 @@
     <h2>可用版本</h2>
     <table>
       <tr><th>版本</th><th>要点</th></tr>
-      <tr><td><strong>0.3.1</strong></td><td><strong>性能不再当约束</strong>：PCSS 画质四档（20/36/60/96 次采样）、烘焙上限 2048；SelfLight 新增 <strong>实时光源模式</strong>（真 Spot Light，姿势实时的自阴影，Culling Mask 默认只照 PlayerLocal）</td></tr>
+      <tr><td><strong>0.3.2</strong></td><td><strong>修「材质面板还有一半英文」</strong>：ShaderCore 0.1.12 起不再附带 <code>zh-Hans.po</code>，导致 Main / 贴图 / 共享遮罩 / 共享渐变 / 法线贴图 / 粗糙度 / 裁剪阈值 / 选择模块 / 创建贴图 这些内置项永远是英文。现在由本包在缺失时自动补齐（不覆盖上游自带）</td></tr>
+      <tr><td>0.3.1</td><td><strong>性能不再当约束</strong>：PCSS 画质四档（20/36/60/96 次采样）、烘焙上限 2048；SelfLight 新增 <strong>实时光源模式</strong>（真 Spot Light，姿势实时的自阴影，Culling Mask 默认只照 PlayerLocal）</td></tr>
       <tr><td>0.3.0</td><td><strong>补齐汉化</strong>（模板测试/渲染/混合那一整块 + 模块标题 + 右键菜单）、SelfLight 加 <strong>PCSS 软阴影</strong>、lilToon <strong>逐像素阴影遮罩</strong>可转换</td></tr>
       <tr><td>0.2.0</td><td>新增 SelfLight（自有光源 + 烘焙自阴影）、Emission / ShadowColor 模块被转换器用上</td></tr>
       <tr><td>0.1.9</td><td>显示名改为 <strong>NonToon (Fork)</strong>（包 id 不变）</td></tr>
       <tr><td>0.1.8</td><td>遮罩通道反向（10 个选择器 4 档 → 8 档）</td></tr>
       <tr><td>0.1.7</td><td>issue #9 受光方向偏移、PR #12 MatCap VR 视差、issue #8 Nearer 开关</td></tr>
       <tr><td>0.1.6</td><td>Emission 模块、模块注册自愈、转换器汉化</td></tr>
+      <tr><td>工具 0.4.2</td><td>工具包：修正读取 ShaderCore 语言设置时的反射（泛型基类静态属性要 FlattenHierarchy）</td></tr>
       <tr><td>工具 0.4.1</td><td>工具包：实时光源创建/同步、PCSS 画质档位面板、阴影遮罩转换</td></tr>
       <tr><td>工具 0.4.0</td><td>工具包 UI <strong>全中文</strong>（带英文 fallback）</td></tr>
     </table>
