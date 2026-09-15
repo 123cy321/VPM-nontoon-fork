@@ -116,7 +116,7 @@
           "vpmDependencies": {
             "jp.lilxyzw.shadercore": "^0.1.9"
           },
-          "zipSHA256": "f8f6e6758963a74efe328eaf11891b9d2d639adf4663a2ff5876774d2f9d7ff7"
+          "zipSHA256": "21482bcd9362cc858b3be94e6fd4811f6671a524f2f7ae938ddc6556a050383c"
         }
       }
     },
@@ -204,7 +204,7 @@
           "vpmDependencies": {
             "jp.lilxyzw.nontoon": ">=0.2.0"
           },
-          "zipSHA256": "6d204596b674d5a0a42f19a94a55732cdea46eb9f95ef62aba97fc7e5f232d0a"
+          "zipSHA256": "bd76628ee59567e295ea6454ea27d3791144f89ffd41d00c4a4ba3a445f9de29"
         }
       }
     }
