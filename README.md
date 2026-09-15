@@ -8,7 +8,7 @@
 |---|---|
 | **一键添加页面** | https://catandling.github.io/VPM-nontoon-fork/ |
 | **listing 地址** | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
-| 最新版本 | 着色器 **0.3.4** ｜ 工具包 **0.4.4** |
+| 最新版本 | 着色器 **0.3.5** ｜ 工具包 **0.4.5** |
 | 依赖 | `jp.lilxyzw.shadercore` ≥ 0.1.9（VPM 自动带） |
 | 支持 | Unity 2022.3 ／ **BiRP**（VRChat）／ Quest 可用（着色器侧功能） |
 
@@ -40,8 +40,8 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 
 | 包 | 装不装 | 内容 |
 |---|---|---|
-| **`NonToon (Fork)`** 0.3.4 | **必装** | 着色器本体 + 少量编辑器辅助（**纯库**，不含工具） |
-| **`NonToon (Fork) Tools`** 0.4.4 | 可选 | lilToon→NonToon 材质转换器、SelfLight 烘焙器、Avatar 光源插件 |
+| **`NonToon (Fork)`** 0.3.5 | **必装** | 着色器本体 + 少量编辑器辅助（**纯库**，不含工具） |
+| **`NonToon (Fork) Tools`** 0.4.5 | 可选 | lilToon→NonToon 材质转换器、SelfLight 烘焙器、Avatar 光源插件 |
 
 > 依赖是**单向**的：装工具包会自动带着色器；只装着色器不会带工具。
 > 工具包的 id 仍是 `com.123cy321.nontoon-converter`（历史原因，保持 id 才能原地升级），显示名已改为 Tools。
@@ -71,7 +71,7 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 | 阴影颜色 | 只有渐变 ramp | **`ShadowColor` 模块**：lilToon 式 1/2/3 层阴影色 + 边界/模糊/强度/对比度，**含 lilToon 的逐像素阴影遮罩**（强度/边界/模糊） |
 | 发光 | 没有（`Lighten` 只是亮度乘数） | **`Emission` 模块**：颜色/贴图/混合/混合遮罩/受主色影响/4 种混合模式，在 `postpixel` 应用 → 不受阴影衰减 |
 | 光照调整 | 结果被硬编码 `saturate()` | `_LightMinLimit` / `_LightMaxLimit` / `_MonochromeLighting` / `_AsUnlit`（**属性名与 lilToon 相同**，可直接迁移） |
-| **自带光源 / 自阴影** | 没有 | **`SelfLight` 模块**：角色私有光 + 烘焙深度图自阴影，**不挂实时光**（VRChat `Lights` 仍为 0）；PCSS 软阴影、阴影距离、接收遮罩、浓度、硬化 |
+| **自带光源 / 自阴影** | 没有 | **`SelfLight` 模块**：角色私有光 + 烘焙深度图自阴影，**不挂实时光**（VRChat `Lights` 仍为 0）；PCSS 软阴影、阴影距离、接收遮罩、浓度、硬化、**色温**、**环境光匹配** |
 | **实时光源** | 没有 | 工具包里的 **Avatar 光源插件**（真 Spot Light，着色器无关，一键创建） |
 | **lilToon 迁移** | 只能手工重做 | 工具包的**材质转换器**：生成新材质、**不动原 lilToon 材质** |
 | **界面语言** | 日文 / 英文 | **完整简体中文**（着色器 146 条 + 工具包 151 条 `.po`，另**自动补齐 ShaderCore 的 31 个内置项**） |
@@ -83,7 +83,7 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 | 文件数（不含 `.meta`） | 54 | **83** |
 | `SC_` 属性声明行 | 123 | **208** |
 | 模块数 | 10 | **13** |
-| Unity 实测面板属性 | — | **NonToon 155 / NonToonFur 141** |
+| Unity 实测面板属性 | — | **NonToon 159 / NonToonFur 145**（其中 10 个是隐藏的内部项） |
 
 > 自己 diff 时注意：**官方 release zip 是 CRLF、本分支源码是 LF**。
 > 用 `diff -rq --strip-trailing-cr -x '*.meta' <官方0.1.3> <本分支>`，不加 `--strip-trailing-cr` 会多出一堆"换行符不同"的假差异。
@@ -131,6 +131,16 @@ ShaderCore 的材质面板、模块标题、枚举标签、ShaderLab 的渲染/�
 现在排他通路放在 `__SC_PHASE_modifylight__`（`sd.lightColor = env + lightSum.color` 之后），
 同时清 `env` 并接管 `sd.L`。
 
+**色温与环境匹配（0.3.5）**
+
+- `Use Color Temperature` + `Color Temperature (K)`：1000–20000K（默认 6500 ≈ 中性白）。
+  黑体近似只有几行 ALU、**零采样**；实时光源那条路直接交给 Unity 的 `Light.colorTemperature`。
+- `Match World Light Color`：**探测地图环境光的颜色**（读 shader 里本来就有 SH L0 与主光颜色
+  ⇒ 零额外采样），给自己的光染色。PCSS4VRC 要靠相机才能做到，而且只在 Friend/AvatarDisplay 视角生效；
+  我们在着色器里拿现成 uniform，**每个视角都准且不花钱**。
+- `Match World Light Direction`：让自己的光与它的自阴影**跟随地图主光方向**，落向不会像贴上去的。
+- 两个匹配**默认都是 0** = 完全不改变现有行为。
+
 > 想要**影子跟着姿势实时变**：用工具包的 Avatar 光源插件，或把组件切到「实时光源」模式。
 > 代价是占 VRChat 的 Lights 计数、依赖观看者的 Shadow Quality、Quest 基本不可用。
 
@@ -169,7 +179,8 @@ ShaderCore 的材质面板、模块标题、枚举标签、ShaderLab 的渲染/�
 
 | 版本 | 要点 |
 |---|---|
-| **0.3.4** | 消耗压回去：PCSS 默认档 中(36)→**低(20)**、接收遮罩默认不采样、强度 0 时**一次都不采**；面板显示采样预算 |
+| **0.3.5** | 着色器 UI 修复（内部属性 `[SCHide]`、三组 `SC_Box`）、**色温**与**环境光匹配**、修「自有光被每盏附加光各加一遍」的过曝 bug |
+| 0.3.4 | 消耗压回去：PCSS 默认档 中(36)→**低(20)**、接收遮罩默认不采样、强度 0 时**一次都不采**；面板显示采样预算 |
 | 0.3.3 | 修「只由它照亮」**没真正关掉世界环境光**（排他通路挪到 `modifylight`，清 `env`、接管 `sd.L`） |
 | 0.3.2 | 修「材质面板还有一半英文」：ShaderCore 0.1.12 起不再带 `zh-Hans.po`，本包缺失时自动补齐 |
 | 0.3.1 | PCSS 画质四档、烘焙上限 2048；新增**实时光源模式** |
@@ -188,7 +199,8 @@ ShaderCore 的材质面板、模块标题、枚举标签、ShaderLab 的渲染/�
 
 | 版本 | 要点 |
 |---|---|
-| **0.4.4** | 面板显示每像素采样预算、默认档位 Low |
+| **0.4.5** | 面板加色温/匹配控件、预算读数移出 DisabledScope；实时光源写入 `Light.colorTemperature` |
+| 0.4.4 | 面板显示每像素采样预算、默认档位 Low |
 | 0.4.3 | 新增独立 **Avatar 光源插件**（着色器无关、一键创建、默认只照 `PlayerLocal`、自动开 Receive Shadows） |
 | 0.4.2 | 修读 ShaderCore 语言设置时的反射（泛型基类的静态属性要 `FlattenHierarchy`） |
 | 0.4.1 | 实时光源创建/同步；PCSS 画质档位面板 |
