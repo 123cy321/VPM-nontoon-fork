@@ -80,6 +80,7 @@
     <h2>可用版本</h2>
     <table>
       <tr><th>版本</th><th>要点</th></tr>
+      <tr><td><strong>0.3.6</strong></td><td>两类光源组件（① 不用改材质 / ② 需材质启用）、<strong>光源编号</strong>（材质指定只接受哪一路光）、<strong>屏蔽环境光</strong>、<strong>阴影颜色 / 阴影强度遮罩 / 可自备阴影贴图</strong>；修自有光被每盏附加光各加一遍</td></tr>
       <tr><td><strong>0.3.5</strong></td><td>着色器 UI 修复（10 个内部管线属性 <code>[SCHide]</code> 不再上面板、按光源/环境匹配/自阴影分组）；新增<strong>色温</strong>与<strong>环境光匹配</strong>；修「自有光被每盏附加光各加一遍」的过曝 bug</td></tr>
       <tr><td><strong>0.3.4</strong></td><td><strong>把消耗压回去</strong>：PCSS 默认档位 中(36)→<strong>低(20 采样)</strong>、接收遮罩默认不采样、强度 0 时<strong>一次都不采</strong>；组件面板直接显示每像素采样预算</td></tr>
       <tr><td><strong>0.3.3</strong></td><td><strong>修 <code>只由它照亮</code> 没真正关掉世界环境光的 bug</strong>（排他通路从 customlight 挪到 modifylight；顺带清 env、接管渐变方向）→ 无环境光/环境光乱来的地图里 avatar 长相一致；工具包加独立的 <strong>Avatar 光源插件</strong></td></tr>

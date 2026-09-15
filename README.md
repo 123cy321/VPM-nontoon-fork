@@ -1,263 +1,208 @@
 # NonToon (Fork)
 
-**[lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 的改进分支** —— 面向 VRChat 的卡通着色器。
-官方停在 **0.1.3（2026-07-14）**之后一行未改，这个分支修掉了它的问题、补上了 lilToon 的迁移路径，
-并加了「自带光源 / 自阴影」和**完整简体中文**。
+**给 VRChat avatar 用的卡通着色器**，基于 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 改进。
+
+官方版本停在 0.1.3 之后没再动过。这个分支修掉了它的问题（半透明、透明排序、侧光下渐变打架……），
+补上了 **lilToon 材质一键迁移**，加了**「自带光源 / 自带阴影」**（地图没灯也不怕），并且**界面全中文**。
 
 | | |
 |---|---|
-| **一键添加页面** | https://catandling.github.io/VPM-nontoon-fork/ |
-| **listing 地址** | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
-| 最新版本 | 着色器 **0.3.5** ｜ 工具包 **0.4.5** |
-| 依赖 | `jp.lilxyzw.shadercore` ≥ 0.1.9（VPM 自动带） |
-| 支持 | Unity 2022.3 ／ **BiRP**（VRChat）／ Quest 可用（着色器侧功能） |
+| **一键添加** | **https://catandling.github.io/VPM-nontoon-fork/** ← 点页面上的按钮 |
+| 手动添加用地址 | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
+| 当前版本 | 着色器 **0.3.6** ｜ 工具包 **0.4.6** |
+| 环境 | Unity 2022.3 ／ **BiRP（VRChat）** ／ Quest 可用 |
 
-> ⚠️ **账号改名公告**：GitHub 账号 `123cy321` → **`CatAndLing`**。
-> GitHub Pages **不为改名做重定向**（实测旧地址直接 404），所以旧的 listing 地址已失效。
-> **以前添加过旧地址的，请在 ALCOM / VCC 里重新添加上面的新地址**（仓库 id 未变，不会多出一条重复项）。
+> ⚠️ **账号改名过**：`123cy321` → **`CatAndLing`**。GitHub Pages 不做重定向，旧地址已失效。
+> 以前添加过旧地址的，请在 ALCOM / VCC 里**重新添加**上面的地址（仓库 id 未变，不会出现重复项）。
 
 ---
 
 ## 安装
 
-**① 一键（推荐）**：打开 **[添加页面](https://catandling.github.io/VPM-nontoon-fork/)**，点上面的按钮 → 唤起 VCC 的「添加仓库」确认框。
+**① 一键**：打开 **[添加页面](https://catandling.github.io/VPM-nontoon-fork/)** → 点按钮 → VCC 会弹「添加仓库」确认框。
 
-> README 里**不能**直接放 `vcc://` 链接：GitHub 的 Markdown 渲染器会过滤非 http(s) 协议，
-> 实测渲染后只剩文字、`href` 被删掉。所以按钮放在 GitHub Pages 上。
-> 要手动触发的话，把下面这行粘到浏览器地址栏：
+> 为什么 README 里不直接放 `vcc://` 按钮：GitHub 会把这种自定义协议的链接过滤掉（只剩文字）。
+> 要手动触发，把下面这行粘到浏览器地址栏即可：
 
 ```text
 vcc://vpm/addRepo?url=https://catandling.github.io/VPM-nontoon-fork/vpm.json
 ```
 
-**② ALCOM / VCC 手动添加**：找到「添加仓库 / Add Repository」，粘贴 **listing 地址**（是 `vpm.json`，**不是** `.zip`）：
+**② ALCOM / VCC 手动添加**：找到「添加仓库 / Add Repository」，粘贴 **listing 地址**（`vpm.json`，不是 zip）：
 
 ```text
 https://catandling.github.io/VPM-nontoon-fork/vpm.json
 ```
 
-添加后包里会出现两个（仓库里保留旧版本便于回退）：
+装完在包列表里会看到两个包：
 
-| 包 | 装不装 | 内容 |
+| 包 | 要不要装 | 是什么 |
 |---|---|---|
-| **`NonToon (Fork)`** 0.3.5 | **必装** | 着色器本体 + 少量编辑器辅助（**纯库**，不含工具） |
-| **`NonToon (Fork) Tools`** 0.4.5 | 可选 | lilToon→NonToon 材质转换器、SelfLight 烘焙器、Avatar 光源插件 |
+| **`NonToon (Fork)`** | **必装** | 着色器本体 |
+| **`NonToon (Fork) Tools`** | 建议装 | lilToon 材质转换器 + 光源 / 自阴影工具（纯可选，不影响着色器） |
 
-> 依赖是**单向**的：装工具包会自动带着色器；只装着色器不会带工具。
-> 工具包的 id 仍是 `com.123cy321.nontoon-converter`（历史原因，保持 id 才能原地升级），显示名已改为 Tools。
+> 装工具包会自动带着色器；只装着色器不会带工具包。
 
 ---
 
-## 这个分支相对官方 0.1.3 做了什么
+## 五分钟上手
 
-### 修掉的问题
+### 1. 把界面切成中文
 
-| # | 问题 | 官方 0.1.3 | 本分支 |
-|---|---|---|---|
-| 1 | **半透明完全失效**（[#11](https://github.com/lilxyzw/NonToon/issues/11)） | Transparent 连续两次 `clip()` → 退化成 Cutout，没有 alpha 混合 | 真正做 alpha 混合（采纳未合并的 [PR #13](https://github.com/lilxyzw/NonToon/pull/13) 思路） |
-| 2 | **透明排序错乱** | 队列 `2460`（落在不透明区间） | `3000`（Transparent 区间） |
-| 3 | **侧光下渐变与直射光打架**（[#9](https://github.com/lilxyzw/NonToon/issues/9)） | 着色方向写死「真实光照 + 视线 × 1.5」 | `_ShadeDirectionBias`，设 `0` = 完全跟随真实光照 |
-| 4 | **VR 里 MatCap 像贴纸**（[PR #12](https://github.com/lilxyzw/NonToon/pull/12)） | 双眼采样同一方向 | `VR Parallax Strength`，默认 `1` = 逐眼采样 |
-| 5 | **大网格被近平面修正推出视锥**（[#8](https://github.com/lilxyzw/NonToon/issues/8)） | 只能全局关 | 逐材质 `Nearer → Enable` |
-| 6 | **遮罩通道不够用**（[#10](https://github.com/lilxyzw/NonToon/issues/10)） | 只能 R/G/B/A | **8 档**：`R / G / B / A / 1-R / 1-G / 1-B / 1-A` |
-| 7 | 环境光穿模 | BiRP 少乘 `cd.screenrim` | 与 URP 对齐 |
-| 8 | 光照衰减偏平 | BiRP 少 `factor *= factor` | 与 URP 对齐 |
-| 9 | 阴影里高光仍是全强度；描边 pass 里 8 次帧深度采样是死代码 | — | 高光受阴影衰减、死代码删除、新增 `_OutlineOffsetFactor/Units` |
+打开任意 NonToon 材质 → 材质编辑器右上角 **Language** → 选 **简体中文**（一次就够，会记住）。
 
-### 加的能力
+> 本包会自动给 ShaderCore 补上缺失的 `zh-Hans.po`（0.1.12 起上游不再附带它，
+> 否则 `贴图 / 共享遮罩 / 粗糙度 / 裁剪阈值` 这些内置项永远是英文）。
+> 如果你在控制台看到 `[NonToon] ShaderCore 缺少简体中文语言文件…已补齐`，那就是它在干活。
 
-| 能力 | 官方 0.1.3 | 本分支 |
-|---|---|---|
-| 阴影颜色 | 只有渐变 ramp | **`ShadowColor` 模块**：lilToon 式 1/2/3 层阴影色 + 边界/模糊/强度/对比度，**含 lilToon 的逐像素阴影遮罩**（强度/边界/模糊） |
-| 发光 | 没有（`Lighten` 只是亮度乘数） | **`Emission` 模块**：颜色/贴图/混合/混合遮罩/受主色影响/4 种混合模式，在 `postpixel` 应用 → 不受阴影衰减 |
-| 光照调整 | 结果被硬编码 `saturate()` | `_LightMinLimit` / `_LightMaxLimit` / `_MonochromeLighting` / `_AsUnlit`（**属性名与 lilToon 相同**，可直接迁移） |
-| **自带光源 / 自阴影** | 没有 | **`SelfLight` 模块**：角色私有光 + 烘焙深度图自阴影，**不挂实时光**（VRChat `Lights` 仍为 0）；PCSS 软阴影、阴影距离、接收遮罩、浓度、硬化、**色温**、**环境光匹配** |
-| **实时光源** | 没有 | 工具包里的 **Avatar 光源插件**（真 Spot Light，着色器无关，一键创建） |
-| **lilToon 迁移** | 只能手工重做 | 工具包的**材质转换器**：生成新材质、**不动原 lilToon 材质** |
-| **界面语言** | 日文 / 英文 | **完整简体中文**（着色器 146 条 + 工具包 151 条 `.po`，另**自动补齐 ShaderCore 的 31 个内置项**） |
-
-### 体量（实测普查）
-
-| | 官方 0.1.3 | 本分支 0.3.4 |
-|---|---|---|
-| 文件数（不含 `.meta`） | 54 | **83** |
-| `SC_` 属性声明行 | 123 | **208** |
-| 模块数 | 10 | **13** |
-| Unity 实测面板属性 | — | **NonToon 159 / NonToonFur 145**（其中 10 个是隐藏的内部项） |
-
-> 自己 diff 时注意：**官方 release zip 是 CRLF、本分支源码是 LF**。
-> 用 `diff -rq --strip-trailing-cr -x '*.meta' <官方0.1.3> <本分支>`，不加 `--strip-trailing-cr` 会多出一堆"换行符不同"的假差异。
-
----
-
-## 四个主打能力
-
-### ① 完整简体中文
-
-ShaderCore 的材质面板、模块标题、枚举标签、ShaderLab 的渲染/模板属性、右键菜单与队列名，以及
-工具包的窗口 / 报告 / 日志 / 组件检视面板**全部中文**（未命中的 key 自动回落英文）。
-
-**ShaderCore 0.1.12 起不再附带 `zh-Hans.po`**，导致 `Main` / `贴图` / `共享遮罩` / `粗糙度` / `裁剪阈值`
-这些**内置项永远是英文**（`L10n` 找不到语言文件就回落 `en-US.po`，在 core 表里命中英文直接返回，
-自己写多少 po 都轮不到）。本包会在缺失时**自动补齐** ShaderCore 的 `zh-Hans.po`：
-只在缺失时写、**绝不覆盖**上游自带的、幂等、`zh-CN` 也一并覆盖。
-
-使用前提：材质编辑器右上角 **Language 选「简体中文」**（一次性，会记住）。
-
-### ② lilToon → NonToon 转换器
+### 2. 手上有 lilToon 材质？一键迁过来
 
 菜单 **`Tools ▸ lilToon → NonToon 转换器`**，或右键 Hierarchy 里的模型 / Project 里的材质。
-**生成新材质，不改动原 lilToon 材质**；转换报告会逐条说明哪些 1:1 搬过去了、哪些是近似、哪些没支持。
 
-- 1:1：`_AsUnlit` / `_LightMinLimit` / `_LightMaxLimit` / `_MonochromeLighting`、1/2/3 层阴影色与边界/模糊、
-  逐像素阴影遮罩（`_ShadowStrengthMask` / `_ShadowBorderMask` / `_ShadowBlurMask`，通道语义与 lilToon 一致）、
-  Emission 全套、Main 2nd/3rd（烘焙进底图）
-- 近似：Roughness、MatCap、RimLight、Backlight、Distance Fade、Fur、Outline
-- 未支持：Decal / Dissolve / Glitter / Refraction / Gem / AudioLink / UV 动画 / `_Emission2nd*` 等
-  （详见包内 `Mapping.md`）
+- **生成新材质，绝不动你原来的 lilToon 材质**
+- 报告会逐条写清楚：哪些是 1:1 搬过去的、哪些是近似、哪些没支持
+- 1:1 的包括：光照上下限 / 单色 / 无光照、1、2、3 层阴影色与边界模糊、**逐像素阴影遮罩**、发光全套
+- MatCap、边缘光、距离淡出、毛发、描边这些是**近似**，转完看一眼再微调
 
-### ③ 自带光源与自阴影（地图没有环境光也能用）
+### 3. 地图太黑 / 地图的光不对？给 avatar 加「自带光」
 
-场景：**地图没灯 / 环境光乱来**，希望 avatar 靠自己的光 + 自己的阴影，且在任何世界里长得一样。
+工具包提供**两类**组件，先想清楚要哪一种：
 
-`Add Component ▸ NonToon ▸ 自有光源 Self Light`：
+| | **① Avatar 光源** | **② 自有光源** |
+|---|---|---|
+| 菜单 | `GameObject ▸ NonToon ▸ ① 创建 Avatar 光源` | `GameObject ▸ NonToon ▸ ② 创建自有光源` |
+| 要动材质吗 | **不用**：任何着色器（lilToon / Poiyomi / Standard）都吃 | **要**：材质得是 NonToon 并打开「自有光源」（**组件会自动写入，你不用手点**） |
+| 原理 | 真的挂一盏 Unity `Light` | 着色器里加一路私有光 |
+| 阴影 | Unity 实时阴影（跟着姿势变） | 烘焙阴影图（永远可见、Quest 也能用） |
+| 代价 | 占 VRChat 的 `Lights` 计数（PC 上最高 **Poor**）；看的人关了阴影就看不到；多人叠加会照白 | 几乎没有；阴影是「烘焙那一刻的姿态」 |
+| Quest | 基本不可用 | 可用 |
 
-1. 指定一盏方向光/聚光灯（**烘焙只读它的方向/颜色，不会真的挂上去**）
-2. 勾 **「只由它照亮」** → 世界光、环境光、lightmap、顶点光、天空盒反射**全部丢掉**
-3. 点「烘焙自阴影并写入材质」
+**两类都支持更高自由度**：
 
-修过的坑：早期版本「只由它照亮」其实**没关掉环境光** —— SH 环境光是在 `customlight` 相位**之后**
-才累加进 `env` 的，在那儿清零等于白清，而且 `sd.L` 被 SH 污染（同一颗 avatar 换个地图就换一副渐变）。
-现在排他通路放在 `__SC_PHASE_modifylight__`（`sd.lightColor = env + lightSum.color` 之后），
-同时清 `env` 并接管 `sd.L`。
+- **作用范围**：组件可以挂在任意物体上，并指定它作用于哪个节点（留空 = 自己所在节点）
+- **光源编号（Light ID）**：材质上可以写「**只接受哪一路光源**」（0 = 任意）。
+  于是同一个模型上能并存多路自带光，各照各的材质互不打架 —— 组件写入材质时会自动盖上编号，避免被别路抢走
 
-**色温与环境匹配（0.3.5）**
+**② 自有光源的推荐配置**（地图没灯时）：
 
-- `Use Color Temperature` + `Color Temperature (K)`：1000–20000K（默认 6500 ≈ 中性白）。
-  黑体近似只有几行 ALU、**零采样**；实时光源那条路直接交给 Unity 的 `Light.colorTemperature`。
-- `Match World Light Color`：**探测地图环境光的颜色**（读 shader 里本来就有 SH L0 与主光颜色
-  ⇒ 零额外采样），给自己的光染色。PCSS4VRC 要靠相机才能做到，而且只在 Friend/AvatarDisplay 视角生效；
-  我们在着色器里拿现成 uniform，**每个视角都准且不花钱**。
-- `Match World Light Direction`：让自己的光与它的自阴影**跟随地图主光方向**，落向不会像贴上去的。
-- 两个匹配**默认都是 0** = 完全不改变现有行为。
+1. 勾 **「只由它照亮」** → 世界光、环境光、光照贴图、天空盒反射**全部丢掉**，avatar 在任何地图里长得一样
+2. 只想屏蔽环境光、但保留地图的太阳 → 用 **「屏蔽地图环境光」** 滑块（0–1）
+3. 点「烘焙自阴影并写入材质」，PCSS 画质可选到极高，贴图可到 2048
 
-> 想要**影子跟着姿势实时变**：用工具包的 Avatar 光源插件，或把组件切到「实时光源」模式。
-> 代价是占 VRChat 的 Lights 计数、依赖观看者的 Shadow Quality、Quest 基本不可用。
+**让它跟着地图的光走**（可选）：
 
-### ④ 性能预算（NonToon 的本分就是低消耗）
+- **匹配世界光颜色**：探测地图环境光的颜色，给自己的光染色
+- **匹配世界光方向**：自己的光与自阴影跟着地图主光方向，落向不会像贴上去的
 
-**每像素自阴影采样**（默认全是最省那档，且只在光源包围盒内 + 阴影距离之内才发生）：
+> 这两项读的是着色器里**本来就有**的数据，**不额外花一分钱**（PCSS4VRC 得靠相机才能做到）。
+> 默认都是 0 = 完全不影响现有观感。
 
-| 配置 | 采样/像素 |
-|---|---|
-| `_UseSelfLight = 0`（**默认**） | **0** |
-| 自有光源开、强度 = 0（只要光不要影） | **0**（连 UV/包围盒都跳过） |
-| 自有光源开、PCSS 关（硬阴影） | **1** |
-| PCSS **低（默认）** | **20**（8 blocker + 12 PCF） |
-| PCSS 中 / 高 / 极高 | 36 / 60 / 96 |
-| 接收遮罩 | +1（**默认 0 = 不采样**） |
-| ShadowColor 三张遮罩 | +3（**默认关 = 0 采样**） |
+**色温**：`使用色温` + `色温 (K)`（1000–20000K，6500 ≈ 中性白）。着色器侧只有几行 ALU；
+① 那种组件直接交给 Unity 的 `Light.colorTemperature`。
 
-组件面板会直接把当前预算显示出来。这些默认值由自动化探针**逐条断言**锁死，被改贵会直接报红。
+### 4. 影子想更讲究？
 
-对比：实时光源在着色器侧是 0 采样，但 Unity 要**额外渲染一张阴影贴图**、每个角色多一个 ForwardAdd，
-而且 `Lights = 1` → PC 上性能等级最高只能 **Poor**，**每个看到你的人都付这份开销**。要低消耗就用默认的烘焙那条。
+② 自有光源的「自阴影」一栏里可以调：
+
+- **阴影颜色**：暗部染什么色（默认黑 = 原来的行为）
+- **阴影强度遮罩**：逐像素控制哪里影子深、哪里浅
+- **接收遮罩**：逐像素控制哪里收影子（比如眼白不想被刘海投到，就涂黑）
+- **PCSS 画质**：低 20 / 中 36 / 高 60 / 极高 96 次采样每像素
+- **阴影距离**：离相机超过设定距离自动关掉
+- **阴影硬化（Shadow Clamp）**：把软边压成硬边，动画风用
+
+**自己提供阴影贴图**也行：在「阴影贴图映射（Map）」那一栏放贴图并填原点 / 三轴 / 半宽高 / 远近平面
+（灰度 = 离光源近平面的归一化距离）。烘焙出来的图也是同一套约定。
 
 ---
 
-## 升级注意
+## 性能（NonToon 的本分就是低消耗）
 
-- **从官方版升级**：包 id 与官方相同，装上去就是**升级**官方版，不会并存。
-- **从 ≤ 0.1.10 升级上来**：旧版本把转换器打包在着色包里，包管理器覆盖安装可能残留
-  `Packages/jp.lilxyzw.nontoon/Editor/LilToonConverter/`，菜单里会出现**两个**转换器。
-  遇到就把 `Packages/jp.lilxyzw.nontoon` 整个删掉重装。
-- 新增的属性/模块都带默认值，**旧材质不需要重新转换**。
+每像素自阴影采样，默认全是最省那档，而且**只在光源包围盒内 + 阴影距离之内**才发生：
+
+| 配置 | 采样 / 像素 |
+|---|---|
+| 自有光源关（**默认**） | **0** |
+| 自有光源开、强度 0（只要光不要影） | **0** |
+| 自有光源开、PCSS 关（硬阴影） | **1** |
+| PCSS **低（默认）** | **20** |
+| PCSS 中 / 高 / 极高 | 36 / 60 / 96 |
+| 接收遮罩 / 阴影强度遮罩 | 各 +1（**默认 0 = 不采样**） |
+
+组件面板会直接把当前预算写在上面。反过来，① Avatar 光源在着色器侧是 0 采样，
+但 Unity 要额外渲染一张阴影贴图，**每个看到你的人都付这份开销**。
+
+---
+
+## 常见问题
+
+**Q：装上去会不会和官方 NonToon 并存？**
+不会。包 id 与官方相同（`jp.lilxyzw.nontoon`），所以是**升级**官方版；
+显示名带 `(Fork)` 只是为了让你在包列表里分得清。
+
+**Q：从很老的版本升上来，菜单里出现两个转换器？**
+0.1.10 及更早的着色包里内嵌了转换器，覆盖安装可能残留。
+把 `Packages/jp.lilxyzw.nontoon` 整个删掉、让包管理器重装一次即可。
+
+**Q：转换后看着不太一样？**
+转换是近似的（MatCap、边缘光、距离淡出、毛发、描边尤甚）。
+请看转换报告里标了「近似」的条目，或参考工具包里的 `Mapping.md`。
+
+**Q：Quest 上能用吗？**
+着色器侧功能可以；**实时光源**（① Avatar 光源、② 的实时光源模式）基本不可用。
+
+**Q：老是提示 ShaderCore 模块缺失？**
+装完本包会在编辑器加载时自动补注册并重导着色器（ShaderCore 的模块表只扫描一次，升级上来会静默丢模块）。
+
+---
 
 ## 版本记录
 
-**着色器包 `jp.lilxyzw.nontoon`**
-
 | 版本 | 要点 |
 |---|---|
-| **0.3.5** | 着色器 UI 修复（内部属性 `[SCHide]`、三组 `SC_Box`）、**色温**与**环境光匹配**、修「自有光被每盏附加光各加一遍」的过曝 bug |
-| 0.3.4 | 消耗压回去：PCSS 默认档 中(36)→**低(20)**、接收遮罩默认不采样、强度 0 时**一次都不采**；面板显示采样预算 |
-| 0.3.3 | 修「只由它照亮」**没真正关掉世界环境光**（排他通路挪到 `modifylight`，清 `env`、接管 `sd.L`） |
-| 0.3.2 | 修「材质面板还有一半英文」：ShaderCore 0.1.12 起不再带 `zh-Hans.po`，本包缺失时自动补齐 |
-| 0.3.1 | PCSS 画质四档、烘焙上限 2048；新增**实时光源模式** |
-| 0.3.0 | **汉化补齐**（ShaderLab 渲染/模板属性、模块标题、枚举标签）；SelfLight 加 **PCSS 软阴影**；lilToon **逐像素阴影遮罩**可转换 |
-| 0.2.0 | 新增 **SelfLight**（自有光源 + 烘焙自阴影）；转换器用上 Emission / ShadowColor |
-| 0.1.11 | 转换器移出 → 独立工具包；着色包变纯库 |
-| 0.1.10 | 转换器加拖放区；修「转换后阴影颜色模块没被打开」（Int 属性用 `SetFloat` 写是静默无效的） |
-| 0.1.9 | 显示名 → `NonToon (Fork)`（**包 id 不变**） |
-| 0.1.8 | 遮罩通道反向（4 档 → 8 档，[#10](https://github.com/lilxyzw/NonToon/issues/10)） |
-| 0.1.7 | `_ShadeDirectionBias`（[#9](https://github.com/lilxyzw/NonToon/issues/9)）、MatCap VR 视差（[PR #12](https://github.com/lilxyzw/NonToon/pull/12)）、Nearer 开关（[#8](https://github.com/lilxyzw/NonToon/issues/8)） |
-| 0.1.6 | Emission 模块、模块注册自愈、转换器汉化 |
-| 0.1.5 | 修 0.1.4 的导入故障（`properties.hlsl` 里的注释会让 ShaderCore 解析抛异常） |
-| 0.1.4 | 首次发布 |
+| **0.3.6** | 组件拆成两类（不用改材质 / 需材质启用）、**作用范围**与**光源编号**、**屏蔽环境光**、**阴影颜色 / 阴影强度遮罩 / 可自备阴影贴图**；修「自有光被每盏附加光各加一遍」的过曝 |
+| 0.3.5 | 面板整理（内部参数不再堆在面板上）、**色温**、**环境光匹配** |
+| 0.3.4 | 消耗压回去：默认档 20 采样、强度 0 零采样、面板显示采样预算 |
+| 0.3.3 | 修「只由它照亮」没真正关掉世界环境光 |
+| 0.3.2 | 修「材质面板还有一半英文」（自动补 ShaderCore 的 `zh-Hans.po`） |
+| 0.3.1 | PCSS 画质四档、烘焙上限 2048、实时光源模式 |
+| 0.3.0 | 汉化补齐、PCSS 软阴影、lilToon 逐像素阴影遮罩可转换 |
+| 0.2.0 | 新增自有光源（私有光 + 烘焙自阴影） |
+| 0.1.4 – 0.1.11 | 半透明修复、透明排序、受光方向、MatCap VR 视差、Nearer 开关、8 档遮罩通道、转换器独立成包 |
 
-**工具包 `com.123cy321.nontoon-converter`**
+工具包 `com.123cy321.nontoon-converter` 对应 0.4.x（0.4.6 起含两类光源组件、光源编号、面板预算）。
 
-| 版本 | 要点 |
-|---|---|
-| **0.4.5** | 面板加色温/匹配控件、预算读数移出 DisabledScope；实时光源写入 `Light.colorTemperature` |
-| 0.4.4 | 面板显示每像素采样预算、默认档位 Low |
-| 0.4.3 | 新增独立 **Avatar 光源插件**（着色器无关、一键创建、默认只照 `PlayerLocal`、自动开 Receive Shadows） |
-| 0.4.2 | 修读 ShaderCore 语言设置时的反射（泛型基类的静态属性要 `FlattenHierarchy`） |
-| 0.4.1 | 实时光源创建/同步；PCSS 画质档位面板 |
-| 0.4.0 | 工具包 UI **全中文**（带英文 fallback）、阴影遮罩转换、SelfLight v2 检视面板 |
-| 0.3.x | 拖放区、检测规则重写、自诊断（0 检出时说明原因并列出实际着色器） |
-| 0.2.0 / 0.1.x | 依赖抬到 `>=0.2.0`；转换器从着色包独立出来后的早期版本 |
+> 每个版本的 zip 与 SHA-256 都在 [listing](https://catandling.github.io/VPM-nontoon-fork/vpm.json) 里。
 
-> 全部版本的 zip 与 SHA-256 都在 [listing](https://catandling.github.io/VPM-nontoon-fork/vpm.json) 里，**22 个版本逐个下载比对过**。
+## 依赖与许可
 
-## 依赖
+- 需要 **ShaderCore `jp.lilxyzw.shadercore` ≥ 0.1.9**（VPM 会自动带上）
+- 修改部分基于 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon)，遵守其原始 LICENSE
+- 材质转换器源自 **LilToonToNonToonConverter**（MIT，保留署名）
 
-需要 **ShaderCore `jp.lilxyzw.shadercore` ≥ 0.1.9**（新增模块用到它的 `keepPropertyNames`）。
+---
 
-装完后本包会**自愈**模块注册表：ShaderCore 把「每个着色器启用了哪些模块」冻结在
-`ProjectSettings/jp.lilxyzw.shadercore.asset` 且只在首次导入时扫描一次，升级上来会**静默丢模块**；
-本包内置的 `Editor/NTModuleRegistration.cs` 会在编辑器加载时补上缺失项并强制重导。
+<details>
+<summary>给想深挖的人（技术细节 / 已知限制）</summary>
 
-## 包 id 与显示名
+**相对官方 0.1.3 的改动量**：文件 54 → 83（不含 meta）；`SC_` 属性声明 123 → 226；模块 10 → 13。
 
-| | 值 | 能不能改 |
-|---|---|---|
-| 包 **id**（`name`） | `jp.lilxyzw.nontoon`（与官方相同） | **不能改** —— 同 id 才会被当成官方版的**升级**；改成独立 id 会与官方版**并存**，工程里出现两个同为 `Shader "NonToon"` 的着色器 |
-| **显示名** | `NonToon (Fork)` | 可以改，只影响 ALCOM/VCC 里的显示 |
-| 着色器名 `Shader "NonToon"` | 未改 | 不改 —— 代码与第三方工具里有 `Shader.Find("NonToon")` 这类按名查找 |
-| 工具包 id | `com.123cy321.nontoon-converter` | 不改 —— 改了老用户的包不会被升级，还会与旧包并存 |
+**已知限制**
 
-## 验证状态
+- 只在 **BiRP（VRChat）** 上保证可用；URP 分支在 Unity 2022.3 上是死代码
+- 转换是近似：贴花 / 溶解 / 闪烁 / 折射 / 宝石 / AudioLink / UV 动画 / `_Emission2nd*` 等未移植
+- 两个 SubShader 都没声明 `Queue` 标签，渲染队列靠编辑器写入；脚本或复制出来的材质不会自动带
+- 自阴影永远是「烘焙那一刻的姿态」（VRChat 内做不到实时自阴影）
+- 官方 issue #7（Fur 在 Radeon / 老 N 卡上异常膨胀）未处理；#3 不做；#5 是 Shader-Core 内部问题
 
-每次发版前都在 **Unity 2022.3.22f1 批处理**下跑三套自动化：
+**「选择模块」面板里的模块名仍是英文**：`module.name` 同时是「同一相位里谁先注入」的排序键，
+改中文会静默改变着色器代码拼接顺序（`shade` 相位有 RimShade / Shade / ShadowColor 三个，顺序敏感）。
+材质面板本身已全中文。
 
-1. **AssetBundle 真编译**：为目标平台实际编译着色器变体，抓 `Shader error`。
-   NonToon / NonToonFur **0 编译错误、0 警告**。
-2. **负向对照**：故意写错的着色器必须被报出来，否则本套装置结论作废（实测有效）。
-3. **端到端探针**：转换器（三种渲染模式、阴影色模块、Emission/光照 1:1、阴影遮罩、模型资源检测、
-   VRC 反射剥离）、SelfLight 烘焙、实时光源、汉化 key、默认值预算 —— 全绿输出 `==== 全部通过 ====`。
+**验证方式**：每次发版前在 Unity 2022.3.22f1 批处理下跑 ——
+① **AssetBundle 真编译**（为目标平台实际编译变体，并放一个**故意写错的着色器做负向对照**，
+确保这套装置真的在编译而不是空跑）
+② 端到端探针（转换器 / 自阴影烘焙 / 两类光源 / 汉化 key / 默认值预算）
+③ 发布后从线上把**每个版本逐个下载比对 SHA-256**。
 
-发布后还会**从线上**逐个下载全部 22 个版本的 zip 并比对 SHA-256，与清单逐字符一致。
-
-> 说清楚一个曾经的假绿：早期版本的「着色器无报错」只在 `-nographics` 批处理里查过，
-> 而那种模式**根本不编译 shader 变体**（`ShaderUtil.GetShaderMessages` 对故意写错的着色器也返回 0 条）。
-> 现在用的是上面第 1 条的真编译。
-
-## 已知限制
-
-- **URP 分支在 Unity 2022.3 上是死代码**（要 URP 17 / Unity 6），本分支只保证 **BiRP（VRChat）**。
-- 转换是**近似**：贴图类细节、`_Emission2nd*`、渐变发光、闪烁、荧光、视差深度、Decal/Dissolve/Glitter/
-  Refraction/Gem/AudioLink/UV 动画等未移植；`_OutlineZBias` 因单位不同刻意不映射。
-- 两个 SubShader 都**没有声明 `Queue` 标签**，渲染队列依赖编辑器写入 `m_CustomRenderQueue`，
-  脚本或复制出来的材质不会自动带正确队列。
-- **自阴影是"烘焙那一刻的姿态"**（VRChat 内做不到实时自阴影）；想要实时就用实时光源，代价见上。
-- 官方 issue [#7](https://github.com/lilxyzw/NonToon/issues/7)（Fur 在 Radeon / 老 N 卡上异常膨胀）**未处理**：
-  上游补丁作者本人说明只能缓解不能根治，且改动几何着色器实例 ID 时序风险高。
-- [#3](https://github.com/lilxyzw/NonToon/issues/3) 与 [#7](https://github.com/lilxyzw/NonToon/issues/7) 明确不做；
-  [#5](https://github.com/lilxyzw/NonToon/issues/5)（选中别的着色器时 Render Queue 被清零）是 **Shader-Core 内部的问题**
-  （[Shader-Core #21](https://github.com/lilxyzw/Shader-Core/issues/21)），与分支的改动无关、也改不动。
-
-## 许可
-
-修改部分基于 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon)，请遵守其原始 LICENSE（见包内 `LICENSE`）。
-材质转换器源自 **LilToonToNonToonConverter**（MIT，保留文件头署名）。
+</details>

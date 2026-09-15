@@ -187,6 +187,20 @@
             "jp.lilxyzw.shadercore": "^0.1.9"
           },
           "zipSHA256": "0b6b38275ae722d82fb81c99d2089edcfe55aa0d506d48720190464a1ed0560d"
+        },
+        "0.3.6": {
+          "name": "jp.lilxyzw.nontoon",
+          "version": "0.3.6",
+          "displayName": "NonToon (Fork)",
+          "description": "FORK of lilxyzw/NonToon 0.1.3 - custom build: NT-FIX 1-9 + lilToon-compatible lighting adjustment + per-material shade direction bias + mask channel inversion (1-R/G/B/A) + ShadowColor module (lilToon 1st/2nd/3rd shadow colour, now with lilToon's per-pixel Shadow Strength/Border/Blur masks) + Emission module (lilToon emission/blend mask) + SelfLight module (per-avatar private light with baked self-shadow; NT-FEAT 10 adds PCSS-style soft shadows, shadow density/clamp/distance and a receive mask in the spirit of nHaruka's PCSS4VRC, but with no realtime Light so the VRChat performance rank is untouched) + MatCap VR stereo parallax + per-material Nearer toggle + full zh-Hans localisation (properties, tooltips, module headers, enum labels, ShaderLab-declared rendering/stencil properties). Pure shader library: the lilToon->NonToon material converter and the SelfLight baker live in the companion package com.123cy321.nontoon-converter. Package id is intentionally identical to upstream so this installs as an upgrade of the official NonToon.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://catandling.github.io/VPM-nontoon-fork/jp.lilxyzw.nontoon-0.3.6.zip",
+          "repo": "https://catandling.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.shadercore": "^0.1.9"
+          },
+          "zipSHA256": "8e3f4eb0be7e1a8c16e13e75993c9ffc3a22f5ff85f8dd68f81c777f63248c97"
         }
       }
     },
@@ -345,6 +359,20 @@
             "jp.lilxyzw.nontoon": ">=0.2.0"
           },
           "zipSHA256": "fdbe235b3bc4043bdc6381669231e298cc9f6ff032ae0a7079640ac7e6de10ea"
+        },
+        "0.4.6": {
+          "name": "com.123cy321.nontoon-converter",
+          "version": "0.4.6",
+          "displayName": "NonToon (Fork) Tools",
+          "description": "Tooling companion for NonToon (Fork): (1) the lilToon -> NonToon material converter, which generates NEW materials and never modifies the original lilToon materials, and (2) the SelfLight baker, which gives an avatar its own private light with a baked self-shadow map - no realtime Light component, so it does not affect the VRChat performance rank and never lights the world or other players. 0.4.0 adds a full zh-Hans UI localisation layer (NTL10n + lang/zh-Hans.po, English fallback for any missing key), copies lilToon's per-pixel Shadow Strength/Border/Blur masks into NonToon's ShadowColor module, and exposes the SelfLight v2 PCSS controls (softness, density, clamp, shadow distance, receive mask) in the inspector. VRChat's PipelineManager is accessed through reflection, so this package has no VRChat SDK dependency and also works in non-VRChat projects. See Mapping.md (converter) and SelfLight.md (self light). Package id is historical (it started as the converter) and is kept so existing installs update in place.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://catandling.github.io/VPM-nontoon-fork/com.123cy321.nontoon-converter-0.4.6.zip",
+          "repo": "https://catandling.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.nontoon": ">=0.2.0"
+          },
+          "zipSHA256": "d9320a21816ed0827e96f27cd609030288cce130229edf2b6bef84036a588669"
         }
       }
     }
