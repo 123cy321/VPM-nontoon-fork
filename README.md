@@ -1,5 +1,13 @@
 # NonToon (Fork) — VPM 仓库
 
+> ⚠️ **2026 账号改名公告**：GitHub 账号 `123cy321` → **`CatAndLing`**。
+> GitHub Pages **不会为改名做重定向**（实测旧地址直接 404），所以旧的 listing 地址已失效。
+> **如果你以前添加过旧地址，请在 ALCOM / VCC 里重新添加下面这个新地址。**（仓库 id 没变，不会多出一条重复项。）
+>
+> ```
+> https://catandling.github.io/VPM-nontoon-fork/vpm.json
+> ```
+
 这是一个 [VPM](https://vcc.docs.vrchat.com/vpm/) 包仓库，用于分发 **NonToon (Fork)** ——
 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 0.1.3 的改进分支。
 
