@@ -3,7 +3,8 @@
 **给 VRChat avatar 用的卡通着色器**，基于 [lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 改进。
 
 官方版本停在 0.1.3 之后没再动过。这个分支修掉了它的问题（半透明、透明排序、侧光下渐变打架……），
-补上了 **lilToon 材质一键迁移**，加了**「自带光源 / 自带阴影」**（地图没灯也不怕），并且**界面全中文**。
+补上了 **lilToon 材质一键迁移**，加了**「自带光源 / 自带阴影」**（地图没灯也不怕），并且**界面中文**
+（165 条面板属性里 117 条已汉化，0.3.7 起无需手动切语言）。
 
 | | |
 |---|---|
@@ -11,6 +12,7 @@
 | 手动添加用地址 | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
 | 当前版本 | 着色器 **0.3.7** ｜ 工具包 **0.4.7** |
 | 环境 | Unity 2022.3 ／ **BiRP（VRChat）** ／ Quest 可用 |
+| **用户手册** | **[MANUAL.md](MANUAL.md)** ← 功能逐项说明 / 组件怎么选 / 注意事项 / 与官方版的兼容性 |
 
 > ⚠️ **账号改名过**：`123cy321` → **`CatAndLing`**。GitHub Pages 不做重定向，旧地址已失效。
 > 以前添加过旧地址的，请在 ALCOM / VCC 里**重新添加**上面的地址（仓库 id 未变，不会出现重复项）。
@@ -204,13 +206,17 @@ https://catandling.github.io/VPM-nontoon-fork/vpm.json
 
 - 只在 **BiRP（VRChat）** 上保证可用；URP 分支在 Unity 2022.3 上是死代码
 - 转换是近似：贴花 / 溶解 / 闪烁 / 折射 / 宝石 / AudioLink / UV 动画 / `_Emission2nd*` 等未移植
-- 两个 SubShader 都没声明 `Queue` 标签，渲染队列靠编辑器写入；脚本或复制出来的材质不会自动带
+- `NonToon.scshader` 的两个 SubShader 都没声明 `Queue` 标签（`NonToonFur` 有 `AlphaTest`）；
+  渲染队列靠编辑器写入，脚本或复制出来的材质不会自动带
 - 自阴影永远是「烘焙那一刻的姿态」（VRChat 内做不到实时自阴影）
 - 官方 issue #7（Fur 在 Radeon / 老 N 卡上异常膨胀）未处理；#3 不做；#5 是 Shader-Core 内部问题
 
 **「选择模块」面板里的模块名仍是英文**：`module.name` 同时是「同一相位里谁先注入」的排序键，
 改中文会静默改变着色器代码拼接顺序（`shade` 相位有 RimShade / Shade / ShadowColor 三个，顺序敏感）。
-材质面板本身已全中文。
+
+**面板汉化的实际覆盖率（2026-09 实测）**：165 条属性里 **117 条显示中文**，其余约 48 条是 ShaderCore
+自己的底层属性（`SrcBlendRGB` / `ZWrite` / `Ref` / `Comp` / `Pass` / `Cull` / `AlphaToMask` 等），
+属于 ShaderCore 的词表，本包补不到。0.3.7 起不需要手动切语言。
 
 **验证方式**：每次发版前在 Unity 2022.3.22f1 批处理下跑 ——
 ① **AssetBundle 真编译**（为目标平台实际编译变体，并放一个**故意写错的着色器做负向对照**，
