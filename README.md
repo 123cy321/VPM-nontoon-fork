@@ -1,6 +1,11 @@
-# NonToon（自定义构建）— VPM 仓库
+# NonToon (Fork) — VPM 仓库
 
-这是一个 [VPM](https://vcc.docs.vrchat.com/vpm/) 包仓库，用于分发 **NonToon 的自定义构建**。
+这是一个 [VPM](https://vcc.docs.vrchat.com/vpm/) 包仓库，用于分发 **NonToon (Fork)** ——
+[lilxyzw/NonToon](https://github.com/lilxyzw/NonToon) 0.1.3 的改进分支。
+
+> **为什么显示名带 `(Fork)`**：包 **id 仍是官方的 `jp.lilxyzw.nontoon`**（这样才是「升级官方版」而不是并存的第二套），
+> 但**显示名**刻意加了后缀，避免你在 ALCOM/VCC 的包列表里分不清哪个是这个分支。
+> 两件事都要保持：**id 不能改，显示名要能区分**。
 
 ## 一键添加
 
@@ -34,8 +39,8 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    ```
 
-3. 之后在工程的包管理页里，`NonToon` 会出现 **0.1.8** 版本，安装即可
-   （仓库里同时保留 0.1.6 / 0.1.7，方便回退）
+3. 之后在工程的包管理页里，**`NonToon (Fork)`** 会出现 **0.1.9** 版本，安装即可
+   （仓库里同时保留 0.1.6 / 0.1.7 / 0.1.8，方便回退）
 
 > ⚠️ 注意粘贴的是上面这个 **`vpm.json` 的地址**，不是 `.zip` 的地址。
 
@@ -102,13 +107,19 @@ ShaderCore 的语言默认取系统区域（如 `zh-CN`），而语言文件叫 
 > `ProjectSettings/jp.lilxyzw.shadercore.asset` 里，只在首次导入时扫描一次；
 > 本包内置的 `Editor/NTModuleRegistration.cs` 会在编辑器加载时补上缺失的模块并强制重导着色器。
 
-## 关于包 id
+## 关于包 id 与显示名
 
-本构建**沿用官方的包 id `jp.lilxyzw.nontoon`**，只是版本号更高（0.1.7 > 0.1.3）。
+| | 值 | 能不能改 |
+|---|---|---|
+| 包 **id**（`name`） | `jp.lilxyzw.nontoon`（与官方相同） | **不能改** —— 相同 id 才会被当成官方版的**升级**；改成独立 id 会与官方版**并存**，工程里出现两个同为 `Shader "NonToon"` 的着色器，还可能让材质指向错的那个 |
+| **显示名**（`displayName`） | `NonToon (Fork)`（0.1.9 起） | 可以改，只影响 ALCOM/VCC 里的显示，不影响解析与安装 |
+| 着色器名（`Shader "NonToon"`） | `NonToon`（未改） | 不改 —— 代码与第三方工具里有 `Shader.Find("NonToon")` 之类的按名查找，改名会连带出问题 |
 
-这样做是刻意的：它会被视为官方版的**升级**，安装后即替换官方版，不会出现两个同名
-`Shader "NonToon"` 共存（Unity 材质按 GUID 引用 shader，本构建刻意保留了官方的全部资源 GUID，
-所以已有材质不会断引用）。
+所以本分支的做法是：**id 沿用官方、显示名加 `(Fork)` 后缀**。
+这样它会被视为官方版的升级，同时你在包列表里一眼能看出装的是哪一个。
+
+> 0.1.6 / 0.1.7 / 0.1.8 的显示名仍是 `NonToon`（与它们 zip 内的 `package.json` 保持一致），
+> 从 **0.1.9** 起才是 `NonToon (Fork)`。
 
 ## 验证状态
 
