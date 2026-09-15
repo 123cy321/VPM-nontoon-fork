@@ -39,10 +39,35 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    ```
 
-3. 之后在工程的包管理页里，**`NonToon (Fork)`** 会出现 **0.1.9** 版本，安装即可
-   （仓库里同时保留 0.1.6 / 0.1.7 / 0.1.8，方便回退）
+3. 之后在工程的包管理页里，**`NonToon (Fork)`** 会出现 **0.1.10** 版本，安装即可
+   （仓库里同时保留 0.1.6 – 0.1.9，方便回退）
 
 > ⚠️ 注意粘贴的是上面这个 **`vpm.json` 的地址**，不是 `.zip` 的地址。
+
+## lilToon → NonToon 转换器怎么用
+
+菜单：`Tools ▸ LilToon to NonToon Converter`
+（也可以右键 Hierarchy 里的模型 → `Convert lilToon to NonToon`）
+
+**两种用法，任选一种**
+
+1. **拖进去**（0.1.10 起）—— 把模型（Hierarchy 里的，或 Project 里的 fbx / prefab）、材质、文件夹
+   拖到窗口**最上面的方框**里，再点「转换拖入的对象」
+2. **选中再转** —— 在 Project（材质 / 文件夹 / fbx / prefab）或 Hierarchy（模型）里选中，点「转换所选对象」
+
+> ⚠️ **0.1.9 及更早没有拖放功能**，只能走第 2 种；那时候往窗口里拖是**没有反应**的。
+
+**会发生什么**
+
+- 生成**新的** NonToon 材质，**原 lilToon 材质一个都不动**
+- 默认输出到 `Assets/NonToonConverted/`；报告写到
+  `Assets/NonToonConverted/LilToonToNonToonReport.txt`，并在 `Assets/NonToonConversionLogs/` 留一份带环境信息的日志
+- 选 Hierarchy 里的模型时，默认会**复制一份** `模型名_NonToon` 并把原对象禁用（`Ctrl+Z` 可撤销）；
+  想要就地替换就取消勾选「复制 Hierarchy 对象并禁用原对象」
+- 失败的项会写进报告，**把报告发我就能定位**
+
+**转换前先看窗口里「检测到的 lilToon 材质」这个数字**：是 0 就说明拖/选的对象里没有 lilToon 材质
+（只认「着色器名里含 lilToon」的材质），转换器不会做任何事 —— 这就是"点了没反应"最常见的原因。
 
 ## 这个构建相对官方 NonToon 0.1.3 改了什么
 

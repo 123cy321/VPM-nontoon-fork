@@ -61,6 +61,20 @@
             "jp.lilxyzw.shadercore": "^0.1.9"
           },
           "zipSHA256": "d0995fd6cf76175b675f0bd4d9756a5d20d3d320f6f1b49f5a74a5e65cc06c5d"
+        },
+        "0.1.10": {
+          "name": "jp.lilxyzw.nontoon",
+          "version": "0.1.10",
+          "displayName": "NonToon (Fork)",
+          "description": "FORK of lilxyzw/NonToon 0.1.3 - custom build: NT-FIX 1-9 + lilToon-compatible lighting adjustment + per-material shade direction bias + mask channel inversion (1-R/G/B/A) + ShadowColor module (lilToon 1st/2nd/3rd shadow colour) + Emission module (lilToon emission/blend mask) + MatCap VR stereo parallax + per-material Nearer toggle + lilToon->NonToon converter (drag-and-drop target; fixed shadow-colour module not being enabled) + zh-Hans localisation. Package id is intentionally identical to upstream so this installs as an upgrade of the official NonToon.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/jp.lilxyzw.nontoon-0.1.10.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.shadercore": "^0.1.9"
+          },
+          "zipSHA256": "e2058a5b97f31180e1b693c80a21b363b84419a88abf82fed1947972d8ddaebd"
         }
       }
     }
