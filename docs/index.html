@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NonToon（自定义构建）— 添加到 VCC / ALCOM</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 40px 20px;
+    font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+    background: #14161a; color: #e7e9ee; line-height: 1.7;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .sub { color: #9aa3b2; margin: 0 0 32px; }
+  .card {
+    background: #1c1f26; border: 1px solid #2b303a; border-radius: 12px;
+    padding: 20px 22px; margin-bottom: 18px;
+  }
+  .card h2 { font-size: 1.02rem; margin: 0 0 12px; color: #cfd6e4; font-weight: 600; }
+  a.btn {
+    display: inline-block; padding: 12px 26px; border-radius: 8px;
+    background: #2f6fd0; color: #fff; text-decoration: none;
+    font-weight: 600; font-size: 1rem; border: 1px solid #4a8ae4;
+  }
+  a.btn:hover { background: #3a7fe0; }
+  code, .url {
+    display: block; background: #0f1115; border: 1px solid #2b303a;
+    border-radius: 6px; padding: 10px 12px; margin: 10px 0 0;
+    font-family: Consolas, "Courier New", monospace; font-size: .86rem;
+    color: #8fd0a0; word-break: break-all; user-select: all;
+  }
+  ol { padding-left: 22px; margin: 10px 0 0; }
+  li { margin-bottom: 6px; }
+  .muted { color: #9aa3b2; font-size: .88rem; margin-top: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid #2b303a; }
+  th { color: #9aa3b2; font-weight: 500; }
+  footer { color: #6f7889; font-size: .84rem; text-align: center; margin-top: 34px; }
+  a { color: #6aa9f0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>NonToon（自定义构建）</h1>
+  <p class="sub">基于 lilxyzw/NonToon 0.1.3 的改进构建 · 最新 <strong>0.1.8</strong></p>
+
+  <div class="card">
+    <h2>一键添加（VCC）</h2>
+    <!-- vcc:// 是自定义协议，只能在真正的 HTML 页面里点；GitHub 的 README 渲染器会把它过滤掉 -->
+    <a class="btn" href="vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json">▶ 添加到 VCC</a>
+    <p class="muted">
+      点按钮后 VCC 会弹出「添加仓库」确认框，确认即可。<br>
+      没反应说明你没装 VCC（或系统没注册 <code style="display:inline;padding:1px 5px">vcc:</code> 协议）——
+      用下面任意一种方式添加。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>ALCOM / VCC 手动添加</h2>
+    <p style="margin:0">在 ALCOM（或 VCC）里找到「添加仓库 / Add Repository」，粘贴这个 listing 地址：</p>
+    <div class="url">https://123cy321.github.io/VPM-nontoon-fork/vpm.json</div>
+    <p class="muted">注意是 <strong>vpm.json</strong> 的地址，不是 <strong>.zip</strong> 的地址。</p>
+  </div>
+
+  <div class="card">
+    <h2>或者：直接复制深链</h2>
+    <div class="url">vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json</div>
+    <p class="muted">复制到浏览器地址栏回车，效果与上面的按钮相同。</p>
+  </div>
+
+  <div class="card">
+    <h2>可用版本</h2>
+    <table>
+      <tr><th>版本</th><th>要点</th></tr>
+      <tr><td><strong>0.1.8</strong></td><td>遮罩通道反向（10 个选择器 4 档 → 8 档）</td></tr>
+      <tr><td>0.1.7</td><td>issue #9 受光方向偏移、PR #12 MatCap VR 视差、issue #8 Nearer 开关</td></tr>
+      <tr><td>0.1.6</td><td>Emission 模块、模块注册自愈、转换器汉化</td></tr>
+    </table>
+    <p class="muted">安装后请在 ShaderCore 材质编辑器里把 Language 切成「简体中文」。</p>
+  </div>
+
+  <footer>
+    本构建基于 <a href="https://github.com/lilxyzw/NonToon">lilxyzw/NonToon</a>，
+    请遵守其原始 LICENSE ·
+    <a href="https://github.com/123cy321/VPM-nontoon-fork">GitHub 仓库</a>
+  </footer>
+</main>
+</body>
+</html>

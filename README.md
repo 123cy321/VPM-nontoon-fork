@@ -4,10 +4,16 @@
 
 ## 一键添加
 
-**▶ [点我添加到 VCC（vcc:// 深链）](vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json)**
+**▶ [点我打开添加页面](https://123cy321.github.io/VPM-nontoon-fork/)**
 
-如果点了没反应（浏览器或 GitHub 的 Markdown 渲染器会过滤 `vcc:` 这类非 http(s) 协议），
-把下面这行复制到浏览器地址栏打开，或按下一节的步骤手动粘贴：
+那个页面上的按钮就是 `vcc://` 深链，点一下会唤起 VCC 的「添加仓库」确认框。
+
+> **为什么 README 里不直接放 `vcc://` 链接**：GitHub 的 Markdown 渲染器会过滤非 http(s) 协议的链接。
+> 实测把 `[文字](vcc://vpm/addRepo?…)` 写进 README 后，渲染出来**只剩加粗文字、`href` 被删掉**
+> （本次已在该仓库线上页面核实）。自定义协议只有在真正的 HTML 页面里点才有效，
+> 所以按钮放在 GitHub Pages 上。
+
+需要手动添加时，把下面这行复制到浏览器地址栏，效果和点按钮相同：
 
 ```text
 vcc://vpm/addRepo?url=https://123cy321.github.io/VPM-nontoon-fork/vpm.json
