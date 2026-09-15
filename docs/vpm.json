@@ -163,6 +163,20 @@
             "jp.lilxyzw.nontoon": ">=0.2.0"
           },
           "zipSHA256": "78d9060261e88ae627dc939a792813fe8987789c8fa2c49e102ac9f309883499"
+        },
+        "0.3.1": {
+          "name": "com.123cy321.nontoon-converter",
+          "version": "0.3.1",
+          "displayName": "NonToon (Fork) Tools",
+          "description": "Tooling companion for NonToon (Fork): (1) the lilToon -> NonToon material converter, which generates NEW materials and never modifies the original lilToon materials, and (2) the SelfLight baker, which gives an avatar its own private light with a baked self-shadow map - no realtime Light component, so it does not affect the VRChat performance rank and never lights the world or other players. 0.3.1 adds self-diagnostics: the window now tells you explicitly when lilToon is not installed in the project (the converter reads lilToon materials as its source, so without lilToon nothing can be detected) and lists the actual shaders it saw when 0 materials are found. VRChat's PipelineManager is accessed through reflection, so this package has no VRChat SDK dependency and also works in non-VRChat projects. See Mapping.md (converter) and SelfLight.md (self light).",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/com.123cy321.nontoon-converter-0.3.1.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.nontoon": ">=0.2.0"
+          },
+          "zipSHA256": "10f36fe346087b9c11a2ce15c3ec48a604ba4430498fa7fbe97b463a29fc0c81"
         }
       }
     }
