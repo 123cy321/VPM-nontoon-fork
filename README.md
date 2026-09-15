@@ -43,8 +43,8 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 
    | 包 | 装不装 | 说明 |
    |---|---|---|
-   | **`NonToon (Fork)` 0.3.2** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
-   | **`NonToon (Fork) Tools` 0.4.2** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 / 实时光源 |
+   | **`NonToon (Fork)` 0.3.3** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Tools` 0.4.3** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 / 实时光源 |
 
    > 依赖方向是**单向的**：装工具包会自动带着色器；装着色器**不会**带工具包（工具是可选件）。
    > 工具包的 **id 仍是 `com.123cy321.nontoon-converter`**（历史原因，保持 id 才能原地升级），显示名已改成 Tools。
@@ -184,6 +184,34 @@ VRChat 性能等级不重要时（avatar 本来就是极高负载），之前为
 `ShaderUtil.GetShaderMessages` 对故意写错的着色器也报 0 条。现在改成**构建 AssetBundle**
 （真正调 `UnityShaderCompiler`）并加**负向对照**：故意写错的着色器必须被报错，否则本探针结论作废。
 结果：对照被报错 ✓，NonToon / NonToonFur **0 编译错误、0 警告**。
+
+## 0.3.3 新增（修「只由它照亮」没真正隔离世界光）
+
+**你问的场景**：地图没有（或乱来）环境光时，希望 avatar 靠**自己的光 + 自己的阴影**。
+这个能力本来就有（`Self Light` 模块的「只由它照亮」），但**那条排他通路是坏的**：
+
+```hlsl
+SCCalculateAllLights:
+    env += lightmap; env += vertexLighting;
+    __SC_PHASE_customlight__            // 我们原来在这里写 env = 0
+    SCCalculateEnvironmentLight(...)    // 之后又 env += envF + ...; env *= 1.2;
+                                        // 并且 sd.L = lightSum.direction + SH*0.333
+```
+
+SH 环境光是在 customlight **之后**才加进 env 的 → 在那儿清零等于白清：地图的环境光/lightmap/顶光照样漏进来，
+`sd.L` 也被污染 → **同一颗 avatar 换个地图就换个样子**。
+
+**修法**：排他通路挪到 `__SC_PHASE_modifylight__`（`sd.lightColor = env + lightSum.color` 之后）：
+
+- 用自己的光重算 `sd.lightColor`（含自阴影），走同一条 `clamp → 单色 → AsUnlit` 链；
+- `env = 0;` —— 后面的 reflection 相位也断掉（不然还会反射地图天空盒）；
+- `sd.L` 换成自己的光方向 → 渐变不再随地图变。
+
+两条通路互斥，**不会双份采样**；自阴影那 60 行抽到 `includes.hlsl` 的宏里两边共用。
+
+**注入对照**（这次专门做的）：`phase_modifylight.hlsl` 相位名写错会**静默不生效**，所以我在里面故意塞了未定义标识符 —— 
+NonToon / NonToonFur 共 **8 个 pass 变体全部报错** → 文件确实被注入；且全程无 `NTSELFSHADOW` 相关错误 → includes 与宏也生效。
+对照删掉后重跑 **0 错 0 警**。
 
 ## 0.3.2 新增（修「材质面板还有一半英文」）
 
