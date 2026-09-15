@@ -39,14 +39,15 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    ```
 
-3. 之后在工程的包管理页里会出现**两个**包（仓库里同时保留 0.1.6 – 0.1.10 便于回退）：
+3. 之后在工程的包管理页里会出现**两个**包（仓库里同时保留旧版本便于回退）：
 
    | 包 | 装不装 | 说明 |
    |---|---|---|
-   | **`NonToon (Fork)` 0.1.11** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
-   | **`NonToon (Fork) Converter` 0.1.0** | 可选 | lilToon → NonToon 材质转换器，**独立辅助包** |
+   | **`NonToon (Fork)` 0.2.0** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Tools` 0.3.0** | 可选 | 工具包：材质转换器 + SelfLight（自有光源）烘焙器 |
 
-   > 依赖方向是**单向的**：装转换器会自动带上着色器；装着色器**不会**带转换器（工具是可选件）。
+   > 依赖方向是**单向的**：装工具包会自动带着色器；装着色器**不会**带工具包（工具是可选件）。
+   > 工具包的 **id 仍是 `com.123cy321.nontoon-converter`**（历史原因，保持 id 才能原地升级），显示名已改成 Tools。
 
 > ⚠️ 注意粘贴的是上面这个 **`vpm.json` 的地址**，不是 `.zip` 的地址。
 
@@ -104,6 +105,27 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
 > 旧版 `CollectMaterials` 会在那条判定路径上一个分支都不进（实测），于是收集到 0 个材质、按钮一直灰着 ——
 > 看起来就像"窗口里根本没有转换按钮"。现在改成：先收对象自身的 Renderer 材质，资源再补「依赖」和
 > 「场景实例」两路（fbx 常常不自带材质，材质挂在场景实例上）。拖 Project 里的 fbx 现在也能正确识别。
+
+## SelfLight —— 角色「自己的光源 + 自阴影」（0.2.0 新增）
+
+给 avatar 一路**只照自己**的光，并让它给自己投影。**不挂任何真实 Unity Light。**
+
+为什么不用真实光源（有官方出处）：
+
+- VRChat 性能等级里 **Lights 在 PC 上要求 0**（Excellent/Good/Medium），只有 Poor 允许 1 —— 挂一盏实时光直接掉档（[Performance Ranks](https://creators.vrchat.com/avatars/avatar-performance-ranking-system/)）
+- 真实光会**照亮世界与其他玩家**；VRChat 的层里 `Player(9)` 是"除本地玩家以外的玩家"、`PlayerLocal(10)` 才是本地玩家，而且 Unity 的 light culling mask 对自定义层本就不可靠（[Unity Layers in VRChat](https://creators.vrchat.com/worlds/layers/)）
+- Quest 端实时光基本不可用
+
+所以全部做在**着色器**里：私有光 + **烘焙好的光照空间阴影图** ⇒ 不进 Lights 计数、不外溢、Quest 可用，
+运行时只多 1 次贴图采样 + 1 个 `dot(N,L)`。
+
+**用法**：avatar 根节点 → `Add Component → NonToon → Self Light` → 指定那盏光源 →
+点「烘焙自阴影并写入材质」。烘焙是**纯 CPU 光线投射**（不需要相机/RT/GPU），
+组件**运行时无行为**，烘焙完可删。
+
+> ⚠️ 要点：阴影是**烘焙那一刻的姿态**（换姿势/改网格/改光源方向都要重烘）；数据写在**材质**里
+> （多对象共享材质就会共享结果）；贴图必须保持"非 sRGB / 不压缩 / 无 mipmap"。
+> 完整注意事项（10 条）见包内 **`SelfLight.md`**。
 
 ## 这个构建相对官方 NonToon 0.1.3 改了什么
 
