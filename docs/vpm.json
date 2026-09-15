@@ -75,6 +75,38 @@
             "jp.lilxyzw.shadercore": "^0.1.9"
           },
           "zipSHA256": "e2058a5b97f31180e1b693c80a21b363b84419a88abf82fed1947972d8ddaebd"
+        },
+        "0.1.11": {
+          "name": "jp.lilxyzw.nontoon",
+          "version": "0.1.11",
+          "displayName": "NonToon (Fork)",
+          "description": "FORK of lilxyzw/NonToon 0.1.3 - custom build: NT-FIX 1-9 + lilToon-compatible lighting adjustment + per-material shade direction bias + mask channel inversion (1-R/G/B/A) + ShadowColor module (lilToon 1st/2nd/3rd shadow colour) + Emission module (lilToon emission/blend mask) + MatCap VR stereo parallax + per-material Nearer toggle + zh-Hans localisation. Pure shader library: the lilToon->NonToon material converter moved to the companion package com.123cy321.nontoon-converter. Package id is intentionally identical to upstream so this installs as an upgrade of the official NonToon.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/jp.lilxyzw.nontoon-0.1.11.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.shadercore": "^0.1.9"
+          },
+          "zipSHA256": "ddd2c1b97a2ea20192b5d321524a2fba6ae642efffe9cd4e0af91df12901fe94"
+        }
+      }
+    },
+    "com.123cy321.nontoon-converter": {
+      "versions": {
+        "0.1.0": {
+          "name": "com.123cy321.nontoon-converter",
+          "version": "0.1.0",
+          "displayName": "NonToon (Fork) Converter",
+          "description": "lilToon -> NonToon material converter, shipped as a companion package to NonToon (Fork) so that the shader package stays a pure library. Generates NEW materials and never modifies the original lilToon materials. VRChat's PipelineManager is accessed through reflection, so this package has no VRChat SDK dependency and also works in non-VRChat projects.",
+          "unity": "2022.3",
+          "hideInEditor": false,
+          "url": "https://123cy321.github.io/VPM-nontoon-fork/com.123cy321.nontoon-converter-0.1.0.zip",
+          "repo": "https://123cy321.github.io/VPM-nontoon-fork/vpm.json",
+          "vpmDependencies": {
+            "jp.lilxyzw.nontoon": ">=0.1.11"
+          },
+          "zipSHA256": "5bfce7839bf7c935e8653ac9ce81157ccc5c318d53d29871591757f4088ff80a"
         }
       }
     }

@@ -39,12 +39,27 @@ https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    https://123cy321.github.io/VPM-nontoon-fork/vpm.json
    ```
 
-3. 之后在工程的包管理页里，**`NonToon (Fork)`** 会出现 **0.1.10** 版本，安装即可
-   （仓库里同时保留 0.1.6 – 0.1.9，方便回退）
+3. 之后在工程的包管理页里会出现**两个**包（仓库里同时保留 0.1.6 – 0.1.10 便于回退）：
+
+   | 包 | 装不装 | 说明 |
+   |---|---|---|
+   | **`NonToon (Fork)` 0.1.11** | 必装 | 着色器本体，**纯库**（只有着色器 + 少量编辑器辅助） |
+   | **`NonToon (Fork) Converter` 0.1.0** | 可选 | lilToon → NonToon 材质转换器，**独立辅助包** |
+
+   > 依赖方向是**单向的**：装转换器会自动带上着色器；装着色器**不会**带转换器（工具是可选件）。
 
 > ⚠️ 注意粘贴的是上面这个 **`vpm.json` 的地址**，不是 `.zip` 的地址。
 
 ## lilToon → NonToon 转换器怎么用
+
+> **0.1.11 起转换器已从着色包移出，改为独立辅助包 `com.123cy321.nontoon-converter`。**
+> 这样主着色包保持**纯库**：不掺工具、不掺 VRChat 相关逻辑。
+> 本包**不依赖 VRChat SDK**（`VRC.Core.PipelineManager` 走反射），所以在非 VRChat 工程里也能用。
+>
+> ⚠️ **从 0.1.10 及更早升级上来的话**：如果包管理器只在旧包目录上覆盖文件，
+> 旧的 `Packages/jp.lilxyzw.nontoon/Editor/LilToonConverter/` 可能残留，
+> 于是菜单里会出现**两个**转换器。看到这种情况就把 `Packages/jp.lilxyzw.nontoon` 整个删掉，
+> 让包管理器重新安装一次。
 
 菜单：`Tools ▸ LilToon to NonToon Converter`
 （也可以右键 Hierarchy 里的模型 → `Convert lilToon to NonToon`）
