@@ -10,7 +10,7 @@
 |---|---|
 | 一键添加 | https://catandling.github.io/VPM-nontoon-fork/ （点页面上的按钮） |
 | 手动添加用地址 | `https://catandling.github.io/VPM-nontoon-fork/vpm.json` |
-| 当前版本 | 着色器 **0.3.10** ／ 工具包 **0.5.2** |
+| 当前版本 | 着色器 **0.3.11** ／ 工具包 **0.5.3**（2026-09-18 起改用自有包 id，见 §8） |
 | 环境 | Unity 2022.3 ／ **BiRP（VRChat）** ／ PC 与 Quest |
 
 > **关于账号改名**：作者账号由 `123cy321` 改为 `CatAndLing`。GitHub Pages 不做重定向，旧地址已失效。
@@ -531,14 +531,24 @@ Emission 全套（颜色/贴图/混合模式/混合遮罩/主色强度）、毛�
 
 | 包 | id | 内容 | 依赖 |
 |---|---|---|---|
-| 着色器 | `jp.lilxyzw.nontoon` | `Shaders/`（ShaderCore 着色器定义、模块、本地化）+ `Editor/`（模块注册自愈、ShaderCore 中文补全） | `jp.lilxyzw.shadercore >= 0.1.9` |
-| 工具包 | `com.123cy321.nontoon-converter` | `Runtime/`（光源与亮度组件：`NTSelfLight` ② / `NTSelfLitShadow` ④ / `NTLightAdjust` ⑤）+ `Editor/`（lilToon 转换器、光源与自阴影工具、亮度自适应窗口 ③、Modular Avatar 软依赖桥） | `jp.lilxyzw.nontoon >= 0.2.0` |
+| 着色器 | `com.catandling.nontoon` | `Shaders/`（ShaderCore 着色器定义、模块、本地化）+ `Editor/`（模块注册自愈、ShaderCore 中文补全） | `jp.lilxyzw.shadercore >= 0.1.9` |
+| 工具包 | `com.catandling.nontoon-converter` | `Runtime/`（光源与亮度组件：`NTSelfLight` ② / `NTSelfLitShadow` ④ / `NTLightAdjust` ⑤）+ `Editor/`（lilToon 转换器、光源与自阴影工具、亮度自适应窗口 ③、Modular Avatar 集成） | `com.catandling.nontoon >= 0.3.11`、`nadena.dev.modular-avatar >= 1.10.0` |
+
+> **2026-09-18 身份变更**：本分支**不再沿用上游包 id**。着色器包 `jp.lilxyzw.nontoon` →
+> `com.catandling.nontoon`，工具包 `com.123cy321.nontoon-converter` → `com.catandling.nontoon-converter`，
+> 着色器名 `NonToon` → `nontoon-fork`（另有 `nontoon-fork-fur` / `nontoon-fork-twopass`）。
+> **程序集名与资产 GUID 保留**，以便已有材质的引用不断。没有需要迁移的老用户，全部按全新安装处理。
 
 设计约束（长期有效的决定，改动前请先评估）：
 
-- **包 id、着色器名（`Shader "NonToon"`）、VPM 仓库 id 均保持不变**。前两者影响已有材质与按名查找的代码；
-  仓库 id 是 VPM 识别"同一仓库"的键，改动会让已添加该仓库的用户多出一条失效条目
-- 工具包**不引入 VRCSDK 硬依赖**：所有对 VRC 类型的访问都通过反射完成，未安装 SDK 时降级为提示手动步骤
+- **VPM 仓库 id 保持不变**（`io.github.123cy321.vpm`）：它是 VPM 识别"同一仓库"的键，
+  改动会让已添加该仓库的用户多出一条失效条目。（**包 id 与着色器名已于 2026-09-18 变更**，见上）
+- **工具包 0.5.2 起 Modular Avatar 是必需依赖**：需要菜单的功能一律**声明式**安装，
+  旧的回退路径（直接写你的 FX 控制器 / ExpressionParameters / ExpressionsMenu）已整段删除
+- ⚠️ **实际需要一个 VRChat SDK 工程**：MA 的 `Runtime` asmdef 用 `overrideReferences: true`
+  显式引用 `VRCSDKBase.dll` / `VRCSDK3A.dll` / `VRC.Dynamics.dll` / `System.Collections.Immutable.dll`，
+  缺 SDK 时 Unity 会以「Scripts have compiler errors」中止。工具包**自身**对 VRC 类型的访问
+  确实全走反射（不引入 SDK 的**编译期**依赖），但**整条依赖链离不开 SDK**
 - 亮度自适应插件是**编辑器窗口**，不向场景添加组件。原因见 3.1：avatar 上的自定义脚本不会运行
 
 ## 9. 着色器技术细节
