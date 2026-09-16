@@ -80,6 +80,7 @@
     <h2>可用版本</h2>
     <table>
       <tr><th>版本</th><th>要点</th></tr>
+      <tr><td><strong>0.3.8 / 工具 0.4.9</strong></td><td><strong>修 PCSS 软阴影的边界 bug</strong>：深度图采样器的寻址模式实测是 Repeat（与贴图导入设置无关），未夹紧的取样点会读到深度图<strong>对面</strong>的纹素 —— 贴边一圈的阴影被冲淡（遮挡 1.000 → 0.642），对面是几何时还会凭空多出一条假阴影。现夹到<strong>纹素内部</strong>（只夹到 <code>[0,1]</code> 不够：Repeat 会把 <code>u = 1.0</code> 映射回纹素 0）。另更正「PCSS 是固定循环」「Quest 无动态循环」两处不实描述，补充软影宽度随烘焙分辨率变化等注意事项</td></tr>
       <tr><td><strong>工具 0.4.8</strong></td><td>新增 <strong>③ 亮度自适应与防煤插件</strong>：场景光照诊断 + 「模拟全黑地图」+ <strong>亮度预设</strong>（抬高亮度下限即防煤、零采样代价）+ 生成 VRChat 可调参数（径向菜单驱动 <code>_LightMinLimit</code>）+ 上传前清理</td></tr>
       <tr><td><strong>0.3.7</strong></td><td><strong>修 .meta 缺失</strong>（重装/换机后组件不再变 Missing Script）、<strong>修默认语言下汉化不生效</strong>（中文 Windows 默认 <code>zh-CN</code>，以前 165 条里只有 35 条中文，现在 117 条）</td></tr>
       <tr><td><strong>0.3.6</strong></td><td>两类光源组件（① 不用改材质 / ② 需材质启用）、<strong>光源编号</strong>（材质指定只接受哪一路光）、<strong>屏蔽环境光</strong>、<strong>阴影颜色 / 阴影强度遮罩 / 可自备阴影贴图</strong>；修自有光被每盏附加光各加一遍</td></tr>
