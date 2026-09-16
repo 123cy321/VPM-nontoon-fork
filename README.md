@@ -14,7 +14,12 @@
 | 环境 | Unity 2022.3 ／ **BiRP（VRChat）** ／ PC 与 Quest |
 
 > **关于账号改名**：作者账号由 `123cy321` 改为 `CatAndLing`。GitHub Pages 不做重定向，旧地址已失效。
-> 曾经添加过旧地址的，请在 ALCOM / VCC 里重新添加上表中的地址（仓库 id 未变，不会产生重复项）。
+> 曾经添加过旧地址的，请在 ALCOM / VCC 里重新添加上表中的地址。
+>
+> **2026-09-18 起，VPM 仓库 id 也一并由 `io.github.123cy321.vpm` 改为 `io.github.catandling.vpm`**
+> （与包 id、着色器名同批切分，目的是彻底摆脱旧账号名）。⇒ 已经添加过本仓库的人，
+> 客户端里**可能多出一条同名或失效的条目**：请删掉旧的那条，只保留上表中的地址。
+> 这是**有意接受的代价**，不是故障。
 
 ## 文档导航
 
@@ -541,8 +546,10 @@ Emission 全套（颜色/贴图/混合模式/混合遮罩/主色强度）、毛�
 
 设计约束（长期有效的决定，改动前请先评估）：
 
-- **VPM 仓库 id 保持不变**（`io.github.123cy321.vpm`）：它是 VPM 识别"同一仓库"的键，
-  改动会让已添加该仓库的用户多出一条失效条目。（**包 id 与着色器名已于 2026-09-18 变更**，见上）
+- **VPM 仓库 id 于 2026-09-18 由 `io.github.123cy321.vpm` 改为 `io.github.catandling.vpm`**
+  （与包 id、着色器名同批切分，目的是彻底摆脱旧账号名）。此前"仓库 id 保持不变"那条**作废**。
+  仓库 **URL 未变**（`https://catandling.github.io/VPM-nontoon-fork/vpm.json`）。
+  **已接受的代价**：已添加过本仓库的用户，客户端里可能多出一条失效条目，需手动删掉旧的
 - **工具包 0.5.2 起 Modular Avatar 是必需依赖**：需要菜单的功能一律**声明式**安装，
   旧的回退路径（直接写你的 FX 控制器 / ExpressionParameters / ExpressionsMenu）已整段删除
 - ⚠️ **实际需要一个 VRChat SDK 工程**：MA 的 `Runtime` asmdef 用 `overrideReferences: true`
